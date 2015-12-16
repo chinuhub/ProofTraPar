@@ -1,0 +1,463 @@
+CBMC version 5.3 64-bit x86_64 linux
+Parsing ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c
+Converting
+Type-checking _cs_qrcu_false-unreach-call
+Generating GOTO Program
+Adding CPROVER library
+Function Pointer Removal
+Partial Inlining
+Generic Property Instrumentation
+Starting Bounded Model Checking
+size of program expression: 2662 steps
+simple slicing removed 259 assignments
+Generated 6 VCC(s), 6 remaining after simplification
+Passing problem to propositional reduction
+converting SSA
+Running propositional reduction
+Post-processing
+Solving with MiniSAT 2.2.0 with simplifier
+18026 variables, 51953 clauses
+SAT checker: negated claim is SATISFIABLE, i.e., does not hold
+Runtime decision procedure: 0.093s
+Building error trace
+
+Counterexample:
+
+State 39 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 332 function main thread 0
+----------------------------------------------------
+  tmp_t0_r0=3 (011)
+
+State 40 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 333 function main thread 0
+----------------------------------------------------
+  tmp_t1_r0=2 (010)
+
+State 41 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 334 function main thread 0
+----------------------------------------------------
+  tmp_t2_r0=2 (010)
+
+State 42 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 335 function main thread 0
+----------------------------------------------------
+  tmp_t3_r0=22 (10110)
+
+State 43 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 336 function main thread 0
+----------------------------------------------------
+  tmp_t0_r1=0 (000)
+
+State 44 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 337 function main thread 0
+----------------------------------------------------
+  tmp_t1_r1=3 (011)
+
+State 45 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 338 function main thread 0
+----------------------------------------------------
+  tmp_t2_r1=4 (100)
+
+State 46 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 339 function main thread 0
+----------------------------------------------------
+  tmp_t3_r1=2 (00010)
+
+State 47 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 340 function main thread 0
+----------------------------------------------------
+  tmp_t0_r2=0 (000)
+
+State 48 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 342 function main thread 0
+----------------------------------------------------
+  top3=0 (000000)
+
+State 49 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 342 function main thread 0
+----------------------------------------------------
+  top3=24 (011000)
+
+State 50 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 343 function main thread 0
+----------------------------------------------------
+  sum3=0 (000000)
+
+State 51 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 343 function main thread 0
+----------------------------------------------------
+  sum3=24 (011000)
+
+State 53 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 346 function main thread 0
+----------------------------------------------------
+  thread_index=0 (00000000000000000000000000000000)
+
+State 54 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 347 function main thread 0
+----------------------------------------------------
+  pc_cs[0]=3 (000011)
+
+State 65 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 310 function main_thread thread 0
+----------------------------------------------------
+  var=&__csLOCAL_main_t1 (0000001000000000000000000000000000000000000000000000000000000000)
+
+State 66 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 310 function main_thread thread 0
+----------------------------------------------------
+  size=4 (0000000000000000000000000000000000000000000000000000000000000100)
+
+State 68 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 43 function __cs_init_scalar thread 0
+----------------------------------------------------
+  __csLOCAL_main_t1=0 (00000000000000000000000000000000)
+
+State 73 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 312 function main_thread thread 0
+----------------------------------------------------
+  var=&__csLOCAL_main_t2 (0000001100000000000000000000000000000000000000000000000000000000)
+
+State 74 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 312 function main_thread thread 0
+----------------------------------------------------
+  size=4 (0000000000000000000000000000000000000000000000000000000000000100)
+
+State 76 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 43 function __cs_init_scalar thread 0
+----------------------------------------------------
+  __csLOCAL_main_t2=0 (00000000000000000000000000000000)
+
+State 81 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 314 function main_thread thread 0
+----------------------------------------------------
+  var=&__csLOCAL_main_t3 (0000010000000000000000000000000000000000000000000000000000000000)
+
+State 82 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 314 function main_thread thread 0
+----------------------------------------------------
+  size=4 (0000000000000000000000000000000000000000000000000000000000000100)
+
+State 84 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 43 function __cs_init_scalar thread 0
+----------------------------------------------------
+  __csLOCAL_main_t3=0 (00000000000000000000000000000000)
+
+State 89 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 315 function main_thread thread 0
+----------------------------------------------------
+  m=&mutex (0000010100000000000000000000000000000000000000000000000000000000)
+
+State 90 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 315 function main_thread thread 0
+----------------------------------------------------
+  val=0 (00000000000000000000000000000000)
+
+State 91 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 58 function __cs_mutex_init thread 0
+----------------------------------------------------
+  mutex=-1 (11111111111111111111111111111111)
+
+State 96 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 316 function main_thread thread 0
+----------------------------------------------------
+  id=&__csLOCAL_main_t1 (0000001000000000000000000000000000000000000000000000000000000000)
+
+State 97 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 316 function main_thread thread 0
+----------------------------------------------------
+  attr=NULL (0000000000000000000000000000000000000000000000000000000000000000)
+
+State 98 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 316 function main_thread thread 0
+----------------------------------------------------
+  t=qrcu_reader1_0 (0000011000000000000000000000000000000000000000000000000000000000)
+
+State 99 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 316 function main_thread thread 0
+----------------------------------------------------
+  arg=NULL (0000000000000000000000000000000000000000000000000000000000000000)
+
+State 100 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 316 function main_thread thread 0
+----------------------------------------------------
+  threadID=1 (00000000000000000000000000000001)
+
+State 102 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 65 function __cs_create thread 0
+----------------------------------------------------
+  __csLOCAL_main_t1=1 (00000000000000000000000000000001)
+
+State 103 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 65 function __cs_create thread 0
+----------------------------------------------------
+  active_thread[1]=1 (1)
+
+State 104 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 65 function __cs_create thread 0
+----------------------------------------------------
+  threadargs[1]=NULL (0000000000000000000000000000000000000000000000000000000000000000)
+
+State 113 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 317 function main_thread thread 0
+----------------------------------------------------
+  id=&__csLOCAL_main_t2 (0000001100000000000000000000000000000000000000000000000000000000)
+
+State 114 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 317 function main_thread thread 0
+----------------------------------------------------
+  attr=NULL (0000000000000000000000000000000000000000000000000000000000000000)
+
+State 115 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 317 function main_thread thread 0
+----------------------------------------------------
+  t=qrcu_reader2_0 (0000011100000000000000000000000000000000000000000000000000000000)
+
+State 116 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 317 function main_thread thread 0
+----------------------------------------------------
+  arg=NULL (0000000000000000000000000000000000000000000000000000000000000000)
+
+State 117 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 317 function main_thread thread 0
+----------------------------------------------------
+  threadID=2 (00000000000000000000000000000010)
+
+State 119 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 65 function __cs_create thread 0
+----------------------------------------------------
+  __csLOCAL_main_t2=2 (00000000000000000000000000000010)
+
+State 120 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 65 function __cs_create thread 0
+----------------------------------------------------
+  active_thread[2]=1 (1)
+
+State 121 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 65 function __cs_create thread 0
+----------------------------------------------------
+  threadargs[2]=NULL (0000000000000000000000000000000000000000000000000000000000000000)
+
+State 130 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 318 function main_thread thread 0
+----------------------------------------------------
+  id=&__csLOCAL_main_t3 (0000010000000000000000000000000000000000000000000000000000000000)
+
+State 131 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 318 function main_thread thread 0
+----------------------------------------------------
+  attr=NULL (0000000000000000000000000000000000000000000000000000000000000000)
+
+State 132 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 318 function main_thread thread 0
+----------------------------------------------------
+  t=qrcu_updater_0 (0000100000000000000000000000000000000000000000000000000000000000)
+
+State 133 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 318 function main_thread thread 0
+----------------------------------------------------
+  arg=NULL (0000000000000000000000000000000000000000000000000000000000000000)
+
+State 134 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 318 function main_thread thread 0
+----------------------------------------------------
+  threadID=3 (00000000000000000000000000000011)
+
+State 136 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 65 function __cs_create thread 0
+----------------------------------------------------
+  __csLOCAL_main_t3=3 (00000000000000000000000000000011)
+
+State 137 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 65 function __cs_create thread 0
+----------------------------------------------------
+  active_thread[3]=1 (1)
+
+State 138 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 65 function __cs_create thread 0
+----------------------------------------------------
+  threadargs[3]=NULL (0000000000000000000000000000000000000000000000000000000000000000)
+
+State 160 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 351 function main thread 0
+----------------------------------------------------
+  pc[0]=3 (00011)
+
+State 161 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 353 function main thread 0
+----------------------------------------------------
+  thread_index=1 (00000000000000000000000000000001)
+
+State 163 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 355 function main thread 0
+----------------------------------------------------
+  pc_cs[1]=2 (000010)
+
+State 167 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 357 function main thread 0
+----------------------------------------------------
+  __csLOCALPARAM_qrcu_reader1_arg=NULL (0000000000000000000000000000000000000000000000000000000000000000)
+
+State 174 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 151 function qrcu_reader1_0 thread 0
+----------------------------------------------------
+  var=&__csLOCAL_qrcu_reader1_myidx (0000100100000000000000000000000000000000000000000000000000000000)
+
+State 175 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 151 function qrcu_reader1_0 thread 0
+----------------------------------------------------
+  size=4 (0000000000000000000000000000000000000000000000000000000000000100)
+
+State 177 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 43 function __cs_init_scalar thread 0
+----------------------------------------------------
+  __csLOCAL_qrcu_reader1_myidx=0 (00000000000000000000000000000000)
+
+State 184 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 153 function qrcu_reader1_0 thread 0
+----------------------------------------------------
+  __csLOCAL_qrcu_reader1_myidx=0 (00000000000000000000000000000000)
+
+State 211 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 358 function main thread 0
+----------------------------------------------------
+  pc[1]=2 (00010)
+
+State 212 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 361 function main thread 0
+----------------------------------------------------
+  thread_index=2 (00000000000000000000000000000010)
+
+State 214 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 363 function main thread 0
+----------------------------------------------------
+  pc_cs[2]=2 (000010)
+
+State 218 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 365 function main thread 0
+----------------------------------------------------
+  __csLOCALPARAM_qrcu_reader2_arg=NULL (0000000000000000000000000000000000000000000000000000000000000000)
+
+State 225 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 190 function qrcu_reader2_0 thread 0
+----------------------------------------------------
+  var=&__csLOCAL_qrcu_reader2_myidx (0000101000000000000000000000000000000000000000000000000000000000)
+
+State 226 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 190 function qrcu_reader2_0 thread 0
+----------------------------------------------------
+  size=4 (0000000000000000000000000000000000000000000000000000000000000100)
+
+State 228 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 43 function __cs_init_scalar thread 0
+----------------------------------------------------
+  __csLOCAL_qrcu_reader2_myidx=0 (00000000000000000000000000000000)
+
+State 235 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 192 function qrcu_reader2_0 thread 0
+----------------------------------------------------
+  __csLOCAL_qrcu_reader2_myidx=0 (00000000000000000000000000000000)
+
+State 262 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 366 function main thread 0
+----------------------------------------------------
+  pc[2]=2 (00010)
+
+State 263 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 369 function main thread 0
+----------------------------------------------------
+  thread_index=3 (00000000000000000000000000000011)
+
+State 265 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 371 function main thread 0
+----------------------------------------------------
+  pc_cs[3]=22 (010110)
+
+State 268 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 372 function main thread 0
+----------------------------------------------------
+  __csLOCALPARAM_qrcu_updater_arg=NULL (0000000000000000000000000000000000000000000000000000000000000000)
+
+State 275 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 229 function qrcu_updater_0 thread 0
+----------------------------------------------------
+  var=&__csLOCAL_qrcu_updater_i (0000101100000000000000000000000000000000000000000000000000000000)
+
+State 276 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 229 function qrcu_updater_0 thread 0
+----------------------------------------------------
+  size=4 (0000000000000000000000000000000000000000000000000000000000000100)
+
+State 278 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 43 function __cs_init_scalar thread 0
+----------------------------------------------------
+  __csLOCAL_qrcu_updater_i=0 (00000000000000000000000000000000)
+
+State 283 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 233 function qrcu_updater_0 thread 0
+----------------------------------------------------
+  var=&__csLOCAL_qrcu_updater_sum (0000110000000000000000000000000000000000000000000000000000000000)
+
+State 284 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 233 function qrcu_updater_0 thread 0
+----------------------------------------------------
+  size=4 (0000000000000000000000000000000000000000000000000000000000000100)
+
+State 286 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 43 function __cs_init_scalar thread 0
+----------------------------------------------------
+  __csLOCAL_qrcu_updater_sum=0 (00000000000000000000000000000000)
+
+State 295 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 234 function qrcu_updater_0 thread 0
+----------------------------------------------------
+  __csLOCALPARAM___CS_atomic_take_snapshot_readerstart1=1 (00000000000000000000000000000001)
+
+State 296 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 234 function qrcu_updater_0 thread 0
+----------------------------------------------------
+  __csLOCALPARAM___CS_atomic_take_snapshot_readerstart2=1 (00000000000000000000000000000001)
+
+State 297 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 112 function __CS_atomic_take_snapshot thread 0
+----------------------------------------------------
+  __csLOCALPARAM___CS_atomic_take_snapshot_readerstart1=0 (00000000000000000000000000000000)
+
+State 298 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 113 function __CS_atomic_take_snapshot thread 0
+----------------------------------------------------
+  __csLOCALPARAM___CS_atomic_take_snapshot_readerstart2=0 (00000000000000000000000000000000)
+
+State 308 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 242 function qrcu_updater_0 thread 0
+----------------------------------------------------
+  __csLOCAL_qrcu_updater_sum=0 (00000000000000000000000000000000)
+
+State 313 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 243 function qrcu_updater_0 thread 0
+----------------------------------------------------
+  __csLOCAL_qrcu_updater_sum=1 (00000000000000000000000000000001)
+
+State 324 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 256 function qrcu_updater_0 thread 0
+----------------------------------------------------
+  __csLOCAL_qrcu_updater_sum=0 (00000000000000000000000000000000)
+
+State 329 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 257 function qrcu_updater_0 thread 0
+----------------------------------------------------
+  __csLOCAL_qrcu_updater_sum=1 (00000000000000000000000000000001)
+
+State 347 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 373 function main thread 0
+----------------------------------------------------
+  pc[3]=22 (10110)
+
+State 348 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 377 function main thread 0
+----------------------------------------------------
+  thread_index=0 (00000000000000000000000000000000)
+
+State 350 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 379 function main thread 0
+----------------------------------------------------
+  pc_cs[0]=3 (000011)
+
+State 388 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 382 function main thread 0
+----------------------------------------------------
+  pc[0]=3 (00011)
+
+State 389 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 385 function main thread 0
+----------------------------------------------------
+  thread_index=1 (00000000000000000000000000000001)
+
+State 391 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 387 function main thread 0
+----------------------------------------------------
+  pc_cs[1]=5 (000101)
+
+State 395 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 389 function main thread 0
+----------------------------------------------------
+  __csLOCALPARAM_qrcu_reader1_arg=NULL (0000000000000000000000000000000000000000000000000000000000000000)
+
+State 412 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 156 function qrcu_reader1_0 thread 0
+----------------------------------------------------
+  __csLOCALPARAM___CS_atomic_use1_myidx=0 (00000000000000000000000000000000)
+
+State 414 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 88 function __CS_atomic_use1 thread 0
+----------------------------------------------------
+  ctr1=2 (00000000000000000000000000000010)
+
+State 422 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 176 function qrcu_reader1_0 thread 0
+----------------------------------------------------
+  readerprogress1=1 (00000000000000000000000000000001)
+
+State 434 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 390 function main thread 0
+----------------------------------------------------
+  pc[1]=5 (00101)
+
+State 435 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 393 function main thread 0
+----------------------------------------------------
+  thread_index=2 (00000000000000000000000000000010)
+
+State 437 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 395 function main thread 0
+----------------------------------------------------
+  pc_cs[2]=6 (000110)
+
+State 441 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 397 function main thread 0
+----------------------------------------------------
+  __csLOCALPARAM_qrcu_reader2_arg=NULL (0000000000000000000000000000000000000000000000000000000000000000)
+
+State 458 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 195 function qrcu_reader2_0 thread 0
+----------------------------------------------------
+  __csLOCALPARAM___CS_atomic_use1_myidx=0 (00000000000000000000000000000000)
+
+State 460 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 88 function __CS_atomic_use1 thread 0
+----------------------------------------------------
+  ctr1=3 (00000000000000000000000000000011)
+
+State 468 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 215 function qrcu_reader2_0 thread 0
+----------------------------------------------------
+  readerprogress2=1 (00000000000000000000000000000001)
+
+State 473 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 216 function qrcu_reader2_0 thread 0
+----------------------------------------------------
+  readerprogress2=2 (00000000000000000000000000000010)
+
+State 481 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 398 function main thread 0
+----------------------------------------------------
+  pc[2]=6 (00110)
+
+State 482 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 401 function main thread 0
+----------------------------------------------------
+  thread_index=3 (00000000000000000000000000000011)
+
+State 484 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 403 function main thread 0
+----------------------------------------------------
+  pc_cs[3]=24 (011000)
+
+State 487 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 404 function main thread 0
+----------------------------------------------------
+  __csLOCALPARAM_qrcu_updater_arg=NULL (0000000000000000000000000000000000000000000000000000000000000000)
+
+State 604 file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 297 function qrcu_updater_0 thread 0
+----------------------------------------------------
+  __csLOCALPARAM___CS_atomic_check_progress1_readerstart1=1 (00000000000000000000000000000001)
+
+Violated property:
+  file ../Examples/LazyCSeqFormat/_cs_qrcu_false-unreach-call.c line 123 function __CS_atomic_check_progress1
+  assertion 0
+  (_Bool)0
+
+VERIFICATION FAILED
