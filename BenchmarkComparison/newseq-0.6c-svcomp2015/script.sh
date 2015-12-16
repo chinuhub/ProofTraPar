@@ -1,0 +1,49 @@
+#!/bin/sh
+
+./lazy-cseq.py -i svcomp2015/pthread-ext/01_inc_true-unreach-call.c  --spec ALL.spc --witness 01.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/02_inc_cas_true-unreach-call.c  --spec ALL.spc --witness 02.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/03_incdec_true-unreach-call.c  --spec ALL.spc --witness 03.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/04_incdec_cas_true-unreach-call.c  --spec ALL.spc --witness 04.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/05_tas_true-unreach-call.c  --spec ALL.spc --witness 05.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/06_ticket_true-unreach-call.c  --spec ALL.spc --witness 06.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/07_rand_true-unreach-call.c  --spec ALL.spc --witness 07.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/08_rand_cas_true-unreach-call.c  --spec ALL.spc --witness 08.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/09_fmaxsym_true-unreach-call.c  --spec ALL.spc --witness 09.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/10_fmaxsym_cas_true-unreach-call.c  --spec ALL.spc --witness 10.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/11_fmaxsymopt_true-unreach-call.c  --spec ALL.spc --witness 11.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/12_fmaxsymopt_cas_true-unreach-call.c  --spec ALL.spc --witness 12.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/13_unverif_true-unreach-call.c  --spec ALL.spc --witness 13.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/14_spin2003_true-unreach-call.c  --spec ALL.spc --witness 14.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/15_dekker_true-unreach-call.c  --spec ALL.spc --witness 15.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/16_peterson_true-unreach-call.c  --spec ALL.spc --witness 16.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/17_szymanski_true-unreach-call.c  --spec ALL.spc --witness 17.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/18_read_write_lock_true-unreach-call.c  --spec ALL.spc --witness 18.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/19_time_var_mutex_true-unreach-call.c  --spec ALL.spc --witness 19.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/20_lamport_true-unreach-call.c  --spec ALL.spc --witness 20.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/23_lu-fig2.fixed_true-unreach-call.c  --spec ALL.spc --witness 23.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/25_stack_true-unreach-call.c  --spec ALL.spc --witness 25.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/26_stack_cas_true-unreach-call.c  --spec ALL.spc --witness 26.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/27_Boop_simple_vf_false-unreach-call.c  --spec ALL.spc --witness 27.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/28_buggy_simple_loop1_vf_false-unreach-call.c  --spec ALL.spc --witness 28.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/29_conditionals_vs_true-unreach-call.c  --spec ALL.spc --witness 29.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/30_Function_Pointer3_vs_true-unreach-call.c  --spec ALL.spc --witness 30.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/31_simple_loop5_vs_true-unreach-call.c  --spec ALL.spc --witness 31.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/32_pthread5_vs_false-unreach-call.c  --spec ALL.spc --witness 32.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/33_double_lock_p1_vs_true-unreach-call.c  --spec ALL.spc --witness 33.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/34_double_lock_p2_vs_true-unreach-call.c  --spec ALL.spc --witness 34.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/35_double_lock_p3_vs_true-unreach-call.c  --spec ALL.spc --witness 35.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/36_stack_cas_p0_vs_concur_true-unreach-call.c  --spec ALL.spc --witness 36.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/37_stack_lock_p0_vs_concur_true-unreach-call.c  --spec ALL.spc --witness 37.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/38_rand_cas_vs_concur_true-unreach-call.c  --spec ALL.spc --witness 38.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/39_rand_lock_p0_vs_true-unreach-call.c  --spec ALL.spc --witness 39.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/40_barrier_vf_false-unreach-call.c  --spec ALL.spc --witness 40.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/41_FreeBSD__abd_kbd__sliced_true-unreach-call.c  --spec ALL.spc --witness 41.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/42_FreeBSD__rdma_addr__sliced_true-unreach-call.c  --spec ALL.spc --witness 42.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/43_NetBSD__sysmon_power__sliced_true-unreach-call.c  --spec ALL.spc --witness 43.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/44_Solaris__space_map__sliced_true-unreach-call.c  --spec ALL.spc --witness 44.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/45_monabsex1_vs_true-unreach-call.c  --spec ALL.spc --witness 45.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/46_monabsex2_vs_true-unreach-call.c  --spec ALL.spc --witness 46.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/47_ticket_lock_hc_backoff_vs_true-unreach-call.c  --spec ALL.spc --witness 47.log
+./lazy-cseq.py -i svcomp2015/pthread-ext/48_ticket_lock_low_contention_vs_true-unreach-call.c  --spec ALL.spc --witness 48.log
+
+

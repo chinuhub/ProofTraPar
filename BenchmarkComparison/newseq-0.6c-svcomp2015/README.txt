@@ -1,0 +1,58 @@
+
+             Lazy-CSeq    C-to-C Sequentialisation Tool
+                         v0.6c
+                          October 2014
+                          SVCOMP 2015
+
+
+
+
+*  Package contents *
+
+README.txt        this file
+
+new-feeder.py     Lazy-CSeq feeder script to invoke a model-checker on CSeq's output
+new.py            Lazy-CSeq code-to-code translation tool
+
+remaining *.py    modules
+include/*         include files
+
+lazy_unsafe.c     a sample file to check that the installation went fine
+
+
+
+* Installation *
+
+To install Lazy-CSeq, please follow the steps below:
+
+    1. install the dependencies:
+        Python 2.7.1
+        PYCparser 2.10
+        CBMC 4.9, ESBMC	1.22, LLBMC 2013.1, BLITZ 4.0
+       (none of the above tools is specifically required
+        but at least one of them is needed for verification)
+
+    2. create a directory, suppose this is called  /workspace
+
+    3. extract the entire package contents in  /workspace
+    
+    4. set execution (+x) permissions for  new-feeder.py, new.py
+
+    5. copy or sym-link the CBMC binary file in  /workspace/cbmc,
+       and all the other tools anywhere in the default search path.
+
+
+
+* Usage: verification *
+
+To try Lazy-CSeq, please use the following command:
+
+    ./new-feeder.py  -i lazy_unsafe.c  -u1 -r1 -bcbmc
+
+where the four parameters indicate, respectively, the input file to verify,
+the loop unwind bound, the round bound, and the back-end to use for verification.
+
+For a full list of options, please invoke the tool with the  --help  option.
+
+
+

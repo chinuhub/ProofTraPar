@@ -1,0 +1,363 @@
+CBMC version 5.3 64-bit x86_64 linux
+Parsing _cs_lazy_unsafe.c
+Converting
+Type-checking _cs_lazy_unsafe
+Generating GOTO Program
+Adding CPROVER library
+Function Pointer Removal
+Partial Inlining
+Generic Property Instrumentation
+Starting Bounded Model Checking
+size of program expression: 1090 steps
+simple slicing removed 238 assignments
+Generated 8 VCC(s), 8 remaining after simplification
+Passing problem to propositional reduction
+converting SSA
+Running propositional reduction
+Post-processing
+Solving with MiniSAT 2.2.0 with simplifier
+4737 variables, 11385 clauses
+SAT checker: negated claim is SATISFIABLE, i.e., does not hold
+Runtime decision procedure: 0.016s
+Building error trace
+
+Counterexample:
+
+State 29 file _cs_lazy_unsafe.c line 146 function main thread 0
+----------------------------------------------------
+  tmp_t0_r0=2 (010)
+
+State 30 file _cs_lazy_unsafe.c line 147 function main thread 0
+----------------------------------------------------
+  tmp_t1_r0=3 (11)
+
+State 31 file _cs_lazy_unsafe.c line 148 function main thread 0
+----------------------------------------------------
+  tmp_t2_r0=2 (10)
+
+State 32 file _cs_lazy_unsafe.c line 149 function main thread 0
+----------------------------------------------------
+  tmp_t3_r0=0 (00)
+
+State 33 file _cs_lazy_unsafe.c line 150 function main thread 0
+----------------------------------------------------
+  tmp_t0_r1=1 (001)
+
+State 34 file _cs_lazy_unsafe.c line 151 function main thread 0
+----------------------------------------------------
+  tmp_t1_r1=0 (00)
+
+State 35 file _cs_lazy_unsafe.c line 152 function main thread 0
+----------------------------------------------------
+  tmp_t2_r1=1 (01)
+
+State 36 file _cs_lazy_unsafe.c line 153 function main thread 0
+----------------------------------------------------
+  tmp_t3_r1=2 (10)
+
+State 37 file _cs_lazy_unsafe.c line 154 function main thread 0
+----------------------------------------------------
+  tmp_t0_r2=0 (000)
+
+State 38 file _cs_lazy_unsafe.c line 157 function main thread 0
+----------------------------------------------------
+  thread_index=0 (00000000000000000000000000000000)
+
+State 39 file _cs_lazy_unsafe.c line 158 function main thread 0
+----------------------------------------------------
+  pc_cs[0]=2 (0010)
+
+State 50 file _cs_lazy_unsafe.c line 124 function main_thread thread 0
+----------------------------------------------------
+  m=&mutex (0000001000000000000000000000000000000000000000000000000000000000)
+
+State 51 file _cs_lazy_unsafe.c line 124 function main_thread thread 0
+----------------------------------------------------
+  val=0 (00000000000000000000000000000000)
+
+State 52 file _cs_lazy_unsafe.c line 58 function __cs_mutex_init thread 0
+----------------------------------------------------
+  mutex=-1 (11111111111111111111111111111111)
+
+State 57 file _cs_lazy_unsafe.c line 126 function main_thread thread 0
+----------------------------------------------------
+  var=&__csLOCAL_main_t1 (0000001100000000000000000000000000000000000000000000000000000000)
+
+State 58 file _cs_lazy_unsafe.c line 126 function main_thread thread 0
+----------------------------------------------------
+  size=4 (0000000000000000000000000000000000000000000000000000000000000100)
+
+State 60 file _cs_lazy_unsafe.c line 43 function __cs_init_scalar thread 0
+----------------------------------------------------
+  __csLOCAL_main_t1=0 (00000000000000000000000000000000)
+
+State 65 file _cs_lazy_unsafe.c line 128 function main_thread thread 0
+----------------------------------------------------
+  var=&__csLOCAL_main_t2 (0000010000000000000000000000000000000000000000000000000000000000)
+
+State 66 file _cs_lazy_unsafe.c line 128 function main_thread thread 0
+----------------------------------------------------
+  size=4 (0000000000000000000000000000000000000000000000000000000000000100)
+
+State 68 file _cs_lazy_unsafe.c line 43 function __cs_init_scalar thread 0
+----------------------------------------------------
+  __csLOCAL_main_t2=0 (00000000000000000000000000000000)
+
+State 73 file _cs_lazy_unsafe.c line 130 function main_thread thread 0
+----------------------------------------------------
+  var=&__csLOCAL_main_t3 (0000010100000000000000000000000000000000000000000000000000000000)
+
+State 74 file _cs_lazy_unsafe.c line 130 function main_thread thread 0
+----------------------------------------------------
+  size=4 (0000000000000000000000000000000000000000000000000000000000000100)
+
+State 76 file _cs_lazy_unsafe.c line 43 function __cs_init_scalar thread 0
+----------------------------------------------------
+  __csLOCAL_main_t3=3 (00000000000000000000000000000011)
+
+State 81 file _cs_lazy_unsafe.c line 131 function main_thread thread 0
+----------------------------------------------------
+  id=&__csLOCAL_main_t1 (0000001100000000000000000000000000000000000000000000000000000000)
+
+State 82 file _cs_lazy_unsafe.c line 131 function main_thread thread 0
+----------------------------------------------------
+  attr=NULL (0000000000000000000000000000000000000000000000000000000000000000)
+
+State 83 file _cs_lazy_unsafe.c line 131 function main_thread thread 0
+----------------------------------------------------
+  t=thread1_0 (0000011000000000000000000000000000000000000000000000000000000000)
+
+State 84 file _cs_lazy_unsafe.c line 131 function main_thread thread 0
+----------------------------------------------------
+  arg=NULL (0000000000000000000000000000000000000000000000000000000000000000)
+
+State 85 file _cs_lazy_unsafe.c line 131 function main_thread thread 0
+----------------------------------------------------
+  threadID=1 (00000000000000000000000000000001)
+
+State 87 file _cs_lazy_unsafe.c line 65 function __cs_create thread 0
+----------------------------------------------------
+  __csLOCAL_main_t1=1 (00000000000000000000000000000001)
+
+State 88 file _cs_lazy_unsafe.c line 65 function __cs_create thread 0
+----------------------------------------------------
+  active_thread[1]=1 (1)
+
+State 89 file _cs_lazy_unsafe.c line 65 function __cs_create thread 0
+----------------------------------------------------
+  threadargs[1]=NULL (0000000000000000000000000000000000000000000000000000000000000000)
+
+State 98 file _cs_lazy_unsafe.c line 132 function main_thread thread 0
+----------------------------------------------------
+  id=&__csLOCAL_main_t2 (0000010000000000000000000000000000000000000000000000000000000000)
+
+State 99 file _cs_lazy_unsafe.c line 132 function main_thread thread 0
+----------------------------------------------------
+  attr=NULL (0000000000000000000000000000000000000000000000000000000000000000)
+
+State 100 file _cs_lazy_unsafe.c line 132 function main_thread thread 0
+----------------------------------------------------
+  t=thread2_0 (0000011100000000000000000000000000000000000000000000000000000000)
+
+State 101 file _cs_lazy_unsafe.c line 132 function main_thread thread 0
+----------------------------------------------------
+  arg=NULL (0000000000000000000000000000000000000000000000000000000000000000)
+
+State 102 file _cs_lazy_unsafe.c line 132 function main_thread thread 0
+----------------------------------------------------
+  threadID=2 (00000000000000000000000000000010)
+
+State 104 file _cs_lazy_unsafe.c line 65 function __cs_create thread 0
+----------------------------------------------------
+  __csLOCAL_main_t2=2 (00000000000000000000000000000010)
+
+State 105 file _cs_lazy_unsafe.c line 65 function __cs_create thread 0
+----------------------------------------------------
+  active_thread[2]=1 (1)
+
+State 106 file _cs_lazy_unsafe.c line 65 function __cs_create thread 0
+----------------------------------------------------
+  threadargs[2]=NULL (0000000000000000000000000000000000000000000000000000000000000000)
+
+State 128 file _cs_lazy_unsafe.c line 162 function main thread 0
+----------------------------------------------------
+  pc[0]=2 (010)
+
+State 129 file _cs_lazy_unsafe.c line 164 function main thread 0
+----------------------------------------------------
+  thread_index=1 (00000000000000000000000000000001)
+
+State 131 file _cs_lazy_unsafe.c line 166 function main thread 0
+----------------------------------------------------
+  pc_cs[1]=3 (0011)
+
+State 135 file _cs_lazy_unsafe.c line 168 function main thread 0
+----------------------------------------------------
+  __csLOCALPARAM_thread1_arg=NULL (0000000000000000000000000000000000000000000000000000000000000000)
+
+State 142 file _cs_lazy_unsafe.c line 83 function thread1_0 thread 0
+----------------------------------------------------
+  m=&mutex (0000001000000000000000000000000000000000000000000000000000000000)
+
+State 144 file _cs_lazy_unsafe.c line 60 function __cs_mutex_lock thread 0
+----------------------------------------------------
+  mutex=1 (00000000000000000000000000000001)
+
+State 151 file _cs_lazy_unsafe.c line 84 function thread1_0 thread 0
+----------------------------------------------------
+  data=1 (00000000000000000000000000000001)
+
+State 158 file _cs_lazy_unsafe.c line 85 function thread1_0 thread 0
+----------------------------------------------------
+  m=&mutex (0000001000000000000000000000000000000000000000000000000000000000)
+
+State 160 file _cs_lazy_unsafe.c line 61 function __cs_mutex_unlock thread 0
+----------------------------------------------------
+  mutex=-1 (11111111111111111111111111111111)
+
+State 167 file _cs_lazy_unsafe.c line 169 function main thread 0
+----------------------------------------------------
+  pc[1]=3 (011)
+
+State 168 file _cs_lazy_unsafe.c line 172 function main thread 0
+----------------------------------------------------
+  thread_index=2 (00000000000000000000000000000010)
+
+State 170 file _cs_lazy_unsafe.c line 174 function main thread 0
+----------------------------------------------------
+  pc_cs[2]=2 (0010)
+
+State 174 file _cs_lazy_unsafe.c line 176 function main thread 0
+----------------------------------------------------
+  __csLOCALPARAM_thread2_arg=NULL (0000000000000000000000000000000000000000000000000000000000000000)
+
+State 181 file _cs_lazy_unsafe.c line 95 function thread2_0 thread 0
+----------------------------------------------------
+  m=&mutex (0000001000000000000000000000000000000000000000000000000000000000)
+
+State 183 file _cs_lazy_unsafe.c line 60 function __cs_mutex_lock thread 0
+----------------------------------------------------
+  mutex=2 (00000000000000000000000000000010)
+
+State 190 file _cs_lazy_unsafe.c line 96 function thread2_0 thread 0
+----------------------------------------------------
+  data=3 (00000000000000000000000000000011)
+
+State 198 file _cs_lazy_unsafe.c line 177 function main thread 0
+----------------------------------------------------
+  pc[2]=2 (010)
+
+State 199 file _cs_lazy_unsafe.c line 180 function main thread 0
+----------------------------------------------------
+  thread_index=3 (00000000000000000000000000000011)
+
+State 201 file _cs_lazy_unsafe.c line 189 function main thread 0
+----------------------------------------------------
+  thread_index=0 (00000000000000000000000000000000)
+
+State 203 file _cs_lazy_unsafe.c line 191 function main thread 0
+----------------------------------------------------
+  pc_cs[0]=3 (0011)
+
+State 223 file _cs_lazy_unsafe.c line 133 function main_thread thread 0
+----------------------------------------------------
+  id=&__csLOCAL_main_t3 (0000010100000000000000000000000000000000000000000000000000000000)
+
+State 224 file _cs_lazy_unsafe.c line 133 function main_thread thread 0
+----------------------------------------------------
+  attr=NULL (0000000000000000000000000000000000000000000000000000000000000000)
+
+State 225 file _cs_lazy_unsafe.c line 133 function main_thread thread 0
+----------------------------------------------------
+  t=thread3_0 (0000100000000000000000000000000000000000000000000000000000000000)
+
+State 226 file _cs_lazy_unsafe.c line 133 function main_thread thread 0
+----------------------------------------------------
+  arg=NULL (0000000000000000000000000000000000000000000000000000000000000000)
+
+State 227 file _cs_lazy_unsafe.c line 133 function main_thread thread 0
+----------------------------------------------------
+  threadID=3 (00000000000000000000000000000011)
+
+State 229 file _cs_lazy_unsafe.c line 65 function __cs_create thread 0
+----------------------------------------------------
+  __csLOCAL_main_t3=3 (00000000000000000000000000000011)
+
+State 230 file _cs_lazy_unsafe.c line 65 function __cs_create thread 0
+----------------------------------------------------
+  active_thread[3]=1 (1)
+
+State 231 file _cs_lazy_unsafe.c line 65 function __cs_create thread 0
+----------------------------------------------------
+  threadargs[3]=NULL (0000000000000000000000000000000000000000000000000000000000000000)
+
+State 249 file _cs_lazy_unsafe.c line 194 function main thread 0
+----------------------------------------------------
+  pc[0]=3 (011)
+
+State 250 file _cs_lazy_unsafe.c line 197 function main thread 0
+----------------------------------------------------
+  thread_index=1 (00000000000000000000000000000001)
+
+State 252 file _cs_lazy_unsafe.c line 199 function main thread 0
+----------------------------------------------------
+  pc_cs[1]=3 (0011)
+
+State 256 file _cs_lazy_unsafe.c line 201 function main thread 0
+----------------------------------------------------
+  __csLOCALPARAM_thread1_arg=NULL (0000000000000000000000000000000000000000000000000000000000000000)
+
+State 275 file _cs_lazy_unsafe.c line 202 function main thread 0
+----------------------------------------------------
+  pc[1]=3 (011)
+
+State 276 file _cs_lazy_unsafe.c line 205 function main thread 0
+----------------------------------------------------
+  thread_index=2 (00000000000000000000000000000010)
+
+State 278 file _cs_lazy_unsafe.c line 207 function main thread 0
+----------------------------------------------------
+  pc_cs[2]=3 (0011)
+
+State 282 file _cs_lazy_unsafe.c line 209 function main thread 0
+----------------------------------------------------
+  __csLOCALPARAM_thread2_arg=NULL (0000000000000000000000000000000000000000000000000000000000000000)
+
+State 299 file _cs_lazy_unsafe.c line 97 function thread2_0 thread 0
+----------------------------------------------------
+  m=&mutex (0000001000000000000000000000000000000000000000000000000000000000)
+
+State 301 file _cs_lazy_unsafe.c line 61 function __cs_mutex_unlock thread 0
+----------------------------------------------------
+  mutex=-1 (11111111111111111111111111111111)
+
+State 308 file _cs_lazy_unsafe.c line 210 function main thread 0
+----------------------------------------------------
+  pc[2]=3 (011)
+
+State 309 file _cs_lazy_unsafe.c line 213 function main thread 0
+----------------------------------------------------
+  thread_index=3 (00000000000000000000000000000011)
+
+State 311 file _cs_lazy_unsafe.c line 215 function main thread 0
+----------------------------------------------------
+  pc_cs[3]=2 (0010)
+
+State 315 file _cs_lazy_unsafe.c line 217 function main thread 0
+----------------------------------------------------
+  __csLOCALPARAM_thread3_arg=NULL (0000000000000000000000000000000000000000000000000000000000000000)
+
+State 322 file _cs_lazy_unsafe.c line 107 function thread3_0 thread 0
+----------------------------------------------------
+  m=&mutex (0000001000000000000000000000000000000000000000000000000000000000)
+
+State 324 file _cs_lazy_unsafe.c line 60 function __cs_mutex_lock thread 0
+----------------------------------------------------
+  mutex=3 (00000000000000000000000000000011)
+
+Violated property:
+  file _cs_lazy_unsafe.c line 110 function thread3_0
+  assertion 0
+  (_Bool)0
+
+VERIFICATION FAILED

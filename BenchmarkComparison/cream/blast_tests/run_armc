@@ -1,0 +1,3 @@
+gcc -E $1 > $1.cc;
+cfrontend.asm.exe $1.cc; 
+time armc -straight -nopredpc $1.cc.main.pl

@@ -1,0 +1,2 @@
+gcc -E -DBLAST $1 > $1.cc;
+(time pblast.opt -craig 2 -scope -predH 7 $1.cc) ##&> $1.log
