@@ -1,5 +1,4 @@
 
-
 /*
  * Test.cpp
  *
@@ -44,21 +43,27 @@ int main(int argc, char* argv[]){
 	//it fills the generator as well..
    //lGenerator.StateNamesEnabled(false);
    faudes::Deterministic(lGenerator,generator);
+#ifdef DBGPRNT
    generator.DotWrite("DetermOriginal.dot");
+#endif
    //std::cout<<"Determinisitic done"<<std::endl;
 
    //faudes::StateMin(lGenerator,generator);
 
+#ifdef DBGPRNT
    std::cout<<"Determinization done "<<std::endl;
+#endif
    generator.StateNamesEnabled(false);
    faudes::aStateMin(generator);
+#ifdef DBGPRNT
    std::cout<<"Minimization done "<<std::endl;
+#endif
 
 
 	char* word;
 	size_t length;
-	fa_example(revmerged,&word,&length);
-	std::string revword(word,length);
+	//fa_example(revmerged,&word,&length);
+	//std::string revword(word,length);
 	int i;
 	int cases=0;
   while(!faudes::IsEmptyLanguage(generator))
@@ -68,7 +73,9 @@ int main(int argc, char* argv[]){
 
     std::string revword(generator.GetWord());
 		std::string original(revword);//for some debugging purposes
+#ifdef DBGPRNT
     std::cout<<"Original is "<<original<<std::endl;
+#endif
 		std::reverse(revword.begin(), revword.end());//reverse the word to get it back.
 #ifdef DBGPRNT
 		std::cout<<"Getting accepted state for "<<revword<<std::endl;
@@ -87,6 +94,9 @@ int main(int argc, char* argv[]){
 				{
 					std::cout<<"An errorneous trace "<<std::endl;
 					std::cout<<exword<<std::endl;
+					auto end = boost::chrono::system_clock::now();
+				auto   elapsed = boost::chrono::duration_cast<boost::chrono::duration<double> >(end- start).count();
+					std::cout << "Time spent = "<<elapsed << "seconds "<<'\n';
 					std::exit(-1);
 				}
 
@@ -96,7 +106,9 @@ int main(int argc, char* argv[]){
 		BOOST_ASSERT_MSG(res==false,"Some serious error as this word must not be accepted by this complemented FA");
 #endif
 	 faudes::Generator intersectionres;
+#ifdef DBGPRNT
 	 std::cout<<"Original: States="<<generator.States().Size()<<" Transitions = "<<generator.TransRel().Size()<<std::endl;
+#endif
 	 proofafa->Intersection(generator,intersectionres);
 	 generator.Clear();
      faudes::Deterministic(intersectionres,generator);
@@ -104,7 +116,9 @@ int main(int argc, char* argv[]){
      intersectionres.Clear();
 	 faudes::aStateMin(generator);
 	 delete proofafa;
+#ifdef DBGPRNT
      std::cout<<"Intersection: States = "<<generator.States().Size()<<" Transitions = "<<generator.TransRel().Size()<<std::endl;
+#endif
 
      //generator.Assign(intersectionres);
 
