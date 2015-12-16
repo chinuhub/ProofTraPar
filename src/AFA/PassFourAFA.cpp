@@ -34,11 +34,11 @@ AFAut* AFAut::PassFourNew(AFAStatePtr init, std::set<AFAStatePtr>& tobedeleted, 
 	//NO change in graph by this pass.. only collecting information to be used in phase 2
 	AFAut* tm=new AFAut();
 	tm->mInit=init;
-//#ifdef DBGPRNT
+#ifdef DBGPRNT
 	//tm->PrintToDot("Pass4Phase1.dot");
 	std::cout<<"Pass 1 over"<<std::endl;
 	//std::cin>>i;
-//#endif
+#endif
 /*
 	tm->PrintToDot("Pass4Phase1.dot");
 		std::cout<<"Pass 1 over"<<std::endl;
@@ -53,11 +53,11 @@ AFAut* AFAut::PassFourNew(AFAStatePtr init, std::set<AFAStatePtr>& tobedeleted, 
 
 
 		tm->mInit=init;
-//#ifdef DBGPRNT
+#ifdef DBGPRNT
 		//tm->PrintToDot("Pass4Phase0.dot");
 		std::cout<<"Pass 0 over"<<std::endl;
 		//std::cin>>i;
-//#endif
+#endif
 
 
 		tobedeleted.insert(ANDORStates.begin(),ANDORStates.end());
@@ -146,8 +146,6 @@ AFAut* AFAut::PassFourNew(AFAStatePtr init, std::set<AFAStatePtr>& tobedeleted, 
 		tm->PrintToDot("Pass4Phase2.dot");
 		std::cin>>i;
 #endif
-		std::cout<<"Pass 2 over"<<std::endl;
-			tm->PrintToDot("Pass4Phase2.dot");
 		//	std::cin>>i;
 
 
@@ -233,8 +231,10 @@ std::set<AFAStatePtr> newORLitSet;
 
 
 tm->mInit=newinit;
-std::cout<<"Phase eqclass over"<<std::endl;
-tm->PrintToDot(std::string("Pass4PhaseEqClass.dot"));
+#ifdef DBGPRNT
+	std::cout<<"Phase eqclass over"<<std::endl;
+	tm->PrintToDot(std::string("Pass4PhaseEqClass.dot"));
+#endif
 
 //std::cin>>i;
 
@@ -257,7 +257,6 @@ z3::expr truev=newinit->mAMap.ctx().bool_val(true);
 			SetAFAStatesPtr own;
 			own.insert(w);
 			if(w->mAMap.hash()==truev.hash()){//if valid
-				std::cout<<"Found one"<<std::endl;
 				trueinit=w;
 			  BOOST_FOREACH(auto t, AFAut::mProgram->mAllSyms){
 				 // if(w->mTransitions.find(t)==w->mTransitions.end()){//add only if that symbol is not present..
@@ -331,15 +330,19 @@ z3::expr truev=newinit->mAMap.ctx().bool_val(true);
 		}
  	 }
 		tm->mInit=newinit;
+#ifdef DBGPRNT
 		std::cout<<"Phase self loop addition over"<<std::endl;
 		tm->PrintToDot(std::string("Pass4PhaseSelfLoop.dot"));
+#endif
 
 		//Create generator
 
 
     AFAStatePtr falseerror=tm->Complement(falseaccepted);
+#ifdef DBGPRNT
 	std::cout<<"Complement done "<<std::endl;
 	tm->PrintToDot(std::string("Pass4PhaseComplement.dot"));
+#endif
 
 return tm;
 

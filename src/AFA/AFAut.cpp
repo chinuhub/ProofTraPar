@@ -740,12 +740,16 @@ void AFAut::Intersection(faudes::Generator& rGen, faudes::Generator& rRes)
 		}
 
 	}
+#ifdef DBGPRNT
 	rGen.DotWrite("Original.dot");
 	this->PrintToDot("subtracted.dot");
 	std::cout<<"After Intersection before coacc: States = "<<rRes.States().Size()<<" trans = "<<rRes.TransRel().Size()<<std::endl;
+#endif
 	rRes.Coaccessible();//make it coaccessible..
+#ifdef DBGPRNT
 	std::cout<<"After Intersection after coacc: States = "<<rRes.States().Size()<<" trans = "<<rRes.TransRel().Size()<<std::endl;
 	rRes.DotWrite("After Intersection.dot");
+#endif
 }
 
 
