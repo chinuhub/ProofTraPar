@@ -73,6 +73,7 @@ void Process::ParseInput(std::ifstream& inputfile)
 							z3::expr rhs = client::ParseExp(mParser,res2,mProgram.mVarExprMap,mCtx);
 							std::pair<z3::expr,z3::expr> pr = std::make_pair(lhs,rhs);
 							mProgram.mRWLHRHMap.insert(std::make_pair(symname,pr));
+							mProgram.mSymType.insert(std::make_pair(symname,"read"));
 							//results[2] is lhs
 							//results[3] is rhs
 						}
@@ -90,6 +91,7 @@ void Process::ParseInput(std::ifstream& inputfile)
 							z3::expr rhs = client::ParseExp(mParser,res3,mProgram.mVarExprMap,mCtx);
 							std::pair<z3::expr,z3::expr> pr = std::make_pair(lhs,rhs);
 							mProgram.mRWLHRHMap.insert(std::make_pair(symname,pr));
+							mProgram.mSymType.insert(std::make_pair(symname,"write"));
 
 						}
 					}else if(opname.compare("assume")==0){
@@ -104,6 +106,7 @@ void Process::ParseInput(std::ifstream& inputfile)
 							z3::expr lhs = client::ParseExp(mParser,res2,mProgram.mVarExprMap,mCtx);
 							mProgram.mAssumeLHRHMap.insert(std::make_pair(symname,lhs));
 							mProgram.mRevAssumeLHRHMap.insert(std::make_pair(lhs,symname));
+							mProgram.mSymType.insert(std::make_pair(symname,"assume"));
 																					//results[2] is formula
 						}
 					}else if(opname.compare("lcas")==0){
@@ -124,7 +127,7 @@ void Process::ParseInput(std::ifstream& inputfile)
 							z3::expr assumepart= (var==val1);
 							mProgram.mCASLHRHMap.insert(std::make_pair(symname,pr));
 							mProgram.mRevAssumeLHRHMap.insert(std::make_pair(assumepart,symname));
-
+							mProgram.mSymType.insert(std::make_pair(symname,"lcas"));
 							//results[2] is variable
 							//results[3] is value 1
 							//results[4] is value 2

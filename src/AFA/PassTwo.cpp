@@ -124,13 +124,47 @@ bool AFAState::PassTwo(std::map<AFAStatePtr,AFAStatePtr,mapstatecomparator>& mAl
 		std::set<std::string> keyset = this->getTransitionKeys();
 		BOOST_ASSERT_MSG(keyset.size()==1 && (keyset.find("0")!=keyset.end())," Some problem as this state must have only outgoing edges on 0");
 #endif
+
+//In this funciton, res=true means current state's mHMap is unsat otherwise it is sat..
+		/*
+		 * Add one optimization helpful for the case of tso and pso..
+		 * if any of this disjunction state's child is valid then only keep that child in its transition
+		 * in other words.. dont even call PassTwo on other children..
+		 * NOTE: even if it is a disjunction the state is still an AND(universal state)
+		 * Therefore it will have one transition will states which are of conjunction form..
+		 */
 		bool res=true;
+		bool foundvalid=false;
+		SetAFAStatesPtr newset;
+		std::multimap<std::string,SetAFAStatesPtr> temptransitions;
+		//If it is universal state type then it musthave only one outgoing transition..
+		BOOST_ASSERT_MSG(mTransitions.size()==1," Some serious error in invariants");
 		BOOST_FOREACH(auto st, mTransitions){
 				BOOST_FOREACH(auto st2, st.second)
-						res=res && (st2->PassTwo(mAllStates));
+				{
+					if(HelperIsValid(*(st2->mHMap)))//means this is valid.. then Or will also be valid..
+					{
+						foundvalid=true;
+						newset.insert(st2);
+					}
 				}
-		mUnsatMemoization.insert(std::make_pair(*mHMap,res));
+				if(foundvalid)
+					break;
+		}
+		if(foundvalid)
+		{
+			temptransitions.insert(std::make_pair("0",newset));
+			mTransitions.clear();
+			std::copy(temptransitions.begin(),temptransitions.end(),std::inserter(mTransitions,mTransitions.begin()));
+		}
 
+		BOOST_FOREACH(auto st, mTransitions)
+		{
+			BOOST_FOREACH(auto st2, st.second)
+					res=res && (st2->PassTwo(mAllStates));
+		}
+
+		mUnsatMemoization.insert(std::make_pair(*mHMap,res));//NOte that current state's mHMap is not being changed at all
 		return res;//if both are unsat only then this is unsat..
 	}else if(mType==ORLit){
 		if(mIsAccepted)

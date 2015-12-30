@@ -9,6 +9,7 @@
 #include <iterator>
 #include <map>
 #include<set>
+#include<boost/tokenizer.hpp>
 template <class Name>
 
 class myEdgeWriter {
@@ -133,7 +134,7 @@ AFAStatePtr AFAut::RecMakeAFAutFromFA(struct autstate* state, std::map<struct au
 /**
  * Function to construct and AFA corresponding to word w and neg phi as phi
  */
-AFAut* AFAut::MakeAFAutProof(std::string& word, z3::expr& mPhi,Program* p, int count, bool& bres, faudes::Generator& generator){
+AFAut* AFAut::MakeAFAutProof(std::string& word, z3::expr& mPhi,Program* p, int count, bool& bres, faudes::Generator& generator, std::string memmodel){
 	mProgram= p;
 	 //for mPhi, create a state appropriately.., add this state to a worklist.. and repeat until worklist is empty..
 			//inside loop, remove an element from this worklist and invoke the function FillState on it..
@@ -190,10 +191,15 @@ AFAut* AFAut::MakeAFAutProof(std::string& word, z3::expr& mPhi,Program* p, int c
 			afa->PrintToDot("Pass1.dot");
 #endif
 			afa->PrintToDot("Pass1.dot");
+			std::map<AFAStatePtr,AFAStatePtr,mapstatecomparator> passtwoallstates;
 			if(!afa->mInit->HelperIsUnsat(*(afa->mInit->mHMap)))
 			{
 				bres=false;
-				return NULL;//to denote that this trace is erroneous
+				//Still create Pass2 because we would like to check if this error can be solved
+				//or not..
+				afa->mInit->PassTwo(passtwoallstates);
+				afa->PrintToDot("Pass2.dot");
+				return afa;//to denote that this trace is erroneous
 			}
 			bres=true;
 
@@ -205,7 +211,7 @@ AFAut* AFAut::MakeAFAutProof(std::string& word, z3::expr& mPhi,Program* p, int c
 #ifdef	DBGPRNT
 			std::cout<<"Starting Pass two"<<std::endl;
 #endif
-			std::map<AFAStatePtr,AFAStatePtr,mapstatecomparator> passtwoallstates;
+
 			afa->mInit->PassTwo(passtwoallstates);
 #ifdef	DBGPRNT
 			std::cout<<"Pass two ended"<<std::endl;
@@ -655,7 +661,7 @@ struct GenAFAComparator{
 	}
 };
 
-void AFAut::Intersection(faudes::Generator& rGen, faudes::Generator& rRes)
+void AFAut::Intersection(faudes::Generator& rGen, faudes::Generator& rRes, std::map<faudes::Idx,faudes::Idx>& oldNewInitStatesMap)
 {
 
 	std::map<GenAFATuple, faudes::Idx, GenAFAComparator> seenmap;
@@ -674,6 +680,7 @@ void AFAut::Intersection(faudes::Generator& rGen, faudes::Generator& rRes)
 				  GenAFATuple entry = std::make_tuple(state,setnxt);
 				  faudes::Idx stid = rRes.InsState();
 				  rRes.SetInitState(stid);
+				  oldNewInitStatesMap.insert(std::make_pair(state,stid));
 				  seenmap.insert(std::make_pair(entry,stid));
 				  workset.insert(entry);
 			  }
@@ -687,6 +694,7 @@ void AFAut::Intersection(faudes::Generator& rGen, faudes::Generator& rRes)
 		  	GenAFATuple entry = std::make_tuple(state,setnxt);
 		  	faudes::Idx stid = rRes.InsState();
 		  	rRes.SetInitState(stid);
+		  	oldNewInitStatesMap.insert(std::make_pair(state,stid));
 		  	seenmap.insert(std::make_pair(entry,stid));
 		  	workset.insert(entry);
 		  }
@@ -871,6 +879,147 @@ bool AFAut::IsUnsafe(){
 	else
 		return true;
 }
+
+
+/*******
+ * This function constructs a value flow relation from a proof AFA
+ * Used for TSO/PSO analysis when, after finding that the program reaches erroneous state we
+ * first want to come up with the set of value flow relations (essential) which contributed to
+ * deriving true as the weakest precondition.
+ */
+RFRelPairs AFAut::GetRFRelationFromProof(AFAStatePtr st)
+{
+	VarDefInfo vdinfo;
+	VarUseDefRel vusedefrel;
+	if(st->mIsAccepted)
+		return std::make_pair(vdinfo,vusedefrel);//if it is an accepting stte return the empty set
+	else
+	{
+		//For each successor state of st along some edge say e.. call this function recursively
+		//and recieve rf relation along that path
+		//INV: by this time every state must have only one transition.. in case of AND(uinversal) state
+		//one transition only but its set willhave two states.
+		BOOST_ASSERT_MSG(st->mTransitions.size()==1," Some serious error in invariant, check");
+		for(const auto& elem: st->mTransitions)
+		{
+			std::string sym=elem.first;
+			for(const AFAStatePtr& s: elem.second)
+			{
+				RFRelPairs retv=GetRFRelationFromProof(s);
+				//After getting rf relation..copy it to result.. make sure no conflict
+				//Here conflict means that different values (either vdinfo or relation) appear along
+				//different branches going out from this state which should not be true.
+				VarDefInfo retvdinfo=retv.first;
+				VarUseDefRel retvusedefrel=retv.second;
+				for(const auto& e: retvdinfo)
+				{
+					if(vdinfo.find(e.first)!=vdinfo.end())
+						BOOST_ASSERT_MSG(vdinfo[e.first]==e.second," Some serious error look carefully");
+					else
+						vdinfo[e.first]=e.second;
+				}
+				for(const auto& e: retvusedefrel)
+				{
+					if(vusedefrel.find(e.first)!=vusedefrel.end())
+						BOOST_ASSERT_MSG(vusedefrel[e.first]==e.second," Some serious error look carefully");
+					else
+						vusedefrel[e.first]=e.second;
+				}
+//				std::cout<<"After copy of return size is "<<vdinfo.size()<< " and "<<vusedefrel.size()<<std::endl;
+				////////////////Consistency check over..
+				//get the symbol (prefix closed) based on st->mRWord and the edge
+				//label.. do it only if label is not epsilon or assume
+				if(sym.compare("0")!=0 && mProgram->mSymType[sym]!="assume")
+				{
+//					std::cout<<"Sym is "<<sym<<std::endl;
+					//then it must be a read or write symbol..in mRWLRMap..
+					BOOST_ASSERT_MSG(mProgram->mRWLHRHMap.find(sym)!=mProgram->mRWLHRHMap.end(),"Some serious invariant error, look crefully");
+					//get def var of sym
+					std::string def=mProgram->GetDefVar(sym);
+					//get use vars of sym
+					std::set<std::string> uses=mProgram->GetUseVars(sym);
+					//get suffix of mRWord starting from sym
+					std::string cp(st->mRWord);
+					boost::char_separator<char> sep(".");
+					    boost::tokenizer<boost::char_separator<char>> tokens(st->mRWord, sep);
+					    for (const auto& t : tokens) {
+					        if(t==sym)
+					                break;
+					        cp.erase(0,t.length()+1);
+					    }
+				   //     std::cout<<" Symbol name is "<<cp<<std::endl;
+				   std::string thissym(cp);
+/*
+				   std::cout<<" def is "<<def<<" thissym is "<<thissym<<std::endl;
+				   std::cout<<" use is  "<<std::endl;
+
+				   for(auto tt: uses)
+					   std::cout<<tt<<",";
+				   std::cout<<std::endl;
+				   */
+  				   //update the information based on this symbol type..(directly in result)
+				   //add def-thissym mapping in vdinfo (checking the conflict)
+				   //only if it is s awrit esymbol with lhs as a shared variable
+				   if(mProgram->mSymType[sym]=="write")
+				   {
+//					   std::cout<<sym<<" is a write"<<std::endl;
+					   if(mProgram->mGlobalVars.find(def)!=mProgram->mGlobalVars.end())
+					   {
+//						   std::cout<<def<<" ia a global var"<<std::endl;
+						   if(vdinfo.find(def)!=vdinfo.end())
+							   BOOST_ASSERT_MSG(vdinfo.find(def)->second==thissym," Some serious error.. this def is already set to differnt symbol.. not possible");
+						   else
+							   vdinfo[def]=thissym;
+					   }
+					   //else
+//						   std::cout<<def<<" is not a global var"<<std::endl;
+
+				   }
+				  /* else
+					   std::cout<<sym<<" is a not a write"<<std::endl;*/
+				   //if sym is a read symbol such that its rhs is a global variable then find
+				   //the last write done to this global variable and let that sym be defsym
+				   //add defsym-thissym in vusedefrel relation (while checking the conflict as well)
+				   if(mProgram->mSymType[sym]=="read")
+				   {
+//					   std::cout<<sym<<" is a read"<<std::endl;
+					   if(uses.size()==1)
+					   {
+//						   std::cout<<"use size  is 1"<<std::endl;
+						   std::string useg=*(uses.begin());
+						   if(mProgram->mGlobalVars.find(useg)!=mProgram->mGlobalVars.end())
+						   {
+//							   std::cout<<useg<<" ia a global var"<<std::endl;
+							   //get last mod symbol that defines this global variable..
+							   //this must be defined..
+							   BOOST_ASSERT_MSG(vdinfo.find(useg)!=vdinfo.end()," Some serious issue by now this def must be there ");
+							   std::string lastmod=vdinfo[useg];
+							   if(vusedefrel.find(thissym)!=vusedefrel.end())
+								   BOOST_ASSERT_MSG(vusedefrel[thissym]==lastmod," Some serious issue in conflicting information ");
+							   else
+								   vusedefrel[thissym]=lastmod;
+						   }/*else
+							   std::cout<<useg<<" is not global var"<<std::endl;*/
+					   }/*else
+						   std::cout<<"use size  is not 1"<<std::endl;*/
+				   }
+				   /*else
+					   std::cout<<sym<<" is not a read"<<std::endl;*/
+				}
+
+			}//end of stateset iteration
+		}
+		//return this rf relation constructed so far.
+//		std::cout<<" return map size is "<<vdinfo.size()<<", and "<<vusedefrel.size()<<std::endl;
+		return std::make_pair(vdinfo,vusedefrel);
+	}
+
+
+}
+
+
+
+
 
 AFAut::~AFAut() {
 	//This destructor will traverse over the automaton starting from init and store the set of AFA states in a set.

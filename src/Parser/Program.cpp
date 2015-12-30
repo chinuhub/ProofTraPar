@@ -11,7 +11,7 @@
 #include <boost/assert.hpp>
 #include <boost/algorithm/string/regex.hpp>
 #include "Process.h"
-
+#include "../AFA/AFAState.h"
 bool z3comparator::operator()(const z3::expr& one, const z3::expr& two) const
 {
 	return one.hash()<two.hash();
@@ -109,6 +109,8 @@ bool z3comparator::operator()(const z3::expr& one, const z3::expr& two) const
 					mInitString=mInitString+symname;
 					std::pair<z3::expr,z3::expr> pr = std::make_pair(varexp,valexp);
 					mRWLHRHMap.insert(std::make_pair(symname,pr));
+					mSymType[symname]="write";
+
 			}
 #ifdef	DBGPRNT
 		PrintGlobalVars();
@@ -140,9 +142,34 @@ bool z3comparator::operator()(const z3::expr& one, const z3::expr& two) const
 		}
 	}
 
+	std::string Program::GetDefVar(std::string sym){
+		BOOST_ASSERT_MSG(mRWLHRHMap.find(sym)!=mRWLHRHMap.end()," THis symbol is neither read nor write.. invoke this function only on read/write symbols");
+		std::tuple<z3::expr,z3::expr> pr =mRWLHRHMap.find(sym)->second;
+		z3::expr lhs=std::get<0>(pr);
+		std::stringstream stt;
+		stt<<lhs;
+		return stt.str();
+
+	}
+
+	std::set<std::string> Program::GetUseVars(std::string sym){
+		BOOST_ASSERT_MSG(mRWLHRHMap.find(sym)!=mRWLHRHMap.end()," THis symbol is neither read nor write.. invoke this function only on read/write symbols");
+		std::tuple<z3::expr,z3::expr> pr =mRWLHRHMap.find(sym)->second;
+		z3::expr rhs=std::get<1>(pr);
+		std::set<std::string> useset=AFAState::HelperGetFreeVarsStr(rhs);
+
+		return useset;
+	}
+
+
 	/**
 	 * Destructor
 	 */
 	Program::~Program() {
-		delete mFileName;
+		if(mFileName!=NULL)
+		{
+			delete mFileName;
+			mFileName=NULL;
+		}
+
 	}

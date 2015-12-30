@@ -110,7 +110,8 @@ public:
 	//bool HelperAddEdgeIfAbsent(AFAStatePtr src,AFAStatePtr dest,std::string sym,Graph& g,std::map<AFAStatePtr, vertex_t,mapstatecomparator>mapindex);
 	bool HelperAddEdgeIfAbsent(AFAStatePtr src,AFAStatePtr dest,std::string sym);
 	AFAStatePtr HelperAddStateIfAbsent(z3::expr& phi,std::string& mRWord,bool& isPresent, std::map<AFAStatePtr,AFAStatePtr,mapstatecomparator>& mAllStates);
-	std::set<z3::expr,mapexpcomparator> HelperGetFreeVars(z3::expr& phi);
+	static std::set<z3::expr,mapexpcomparator> HelperGetFreeVars(z3::expr& phi);
+	static std::set<std::string> HelperGetFreeVarsStr(z3::expr& phi);
 	z3::expr HelperSimplifyExpr(z3::expr exp);
 	bool HelperIsUnsat(z3::expr formula);
 	bool HelperIsValid(z3::expr formula);

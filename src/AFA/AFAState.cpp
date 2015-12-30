@@ -7,6 +7,7 @@
 
 #include "AFAState.h"
 #include<boost/foreach.hpp>
+#include<boost/tokenizer.hpp>
 #include<unordered_map>
 #include<vector>
 #include "AFAut.h"
@@ -107,6 +108,21 @@ z3::expr AFAState::HelperSimplifyExpr(z3::expr exp)
 		}
 
 	}
+
+std::set<std::string> AFAState::HelperGetFreeVarsStr(z3::expr& phi){
+	std::set<z3::expr,mapexpcomparator> res = HelperGetFreeVars(phi);
+	std::set<std::string> rest;
+
+	for(const auto& ex: res)
+	{
+		std::stringstream sst;
+		sst<<ex;
+		rest.insert(sst.str());
+	}
+
+	return rest;
+}
+
 
 std::set<z3::expr,mapexpcomparator> AFAState::HelperGetFreeVars(z3::expr& phi){
 	if(phi.is_var()){
@@ -246,14 +262,15 @@ void AFAState::PassOne(std::map<AFAStatePtr,AFAStatePtr,mapstatecomparator>& mAl
 			//start with end of mRWord and keep on moving to front..
 			int i=1;
 			bool notasingleall=true;
-
-		    for (std::string::reverse_iterator rit= mRWord.rbegin(); rit!=mRWord.rend(); ++rit,i++)
+			boost::char_separator<char> sep(".");
+		    boost::tokenizer<boost::char_separator<char>> tokens(mRWord, sep);
+			std::string rest(mRWord);
+		    for (const std::string& sym: tokens)
 		    {
 				bool notasingle=true;
-		   	    std::string rest(mRWord.begin(),mRWord.end()-i);
+		   	    rest.erase(0,sym.length()+1);//+1 for . concatenated at the end
 				//for each character encountered..
-		    	char c = *rit;
-		    	std::string sym(1,c);
+
 		    	if(AFAut::mProgram->mRWLHRHMap.find(sym)!=AFAut::mProgram->mRWLHRHMap.end()){
 		    		//means it is a read/write symbol
 		    		bool isPresent;
