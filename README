@@ -17,6 +17,10 @@ Test Cases
 4. We currently have only 32 bit executable of THREADER. This is also present in a subdirectory called cream inside BenchmarkComparison folder. If you have 64 bit machine then you need to install ia32 library on ubnutu to run it properly. This can be installed as following on ubuntu 14.04
 http://stackoverflow.com/questions/23182765/how-to-install-ia32-libs-in-ubuntu-14-04-lts-trusty-tahr
 
+5. In the language of input programs we use lcas(x)(v1)(v2) to represent blocking lcas command. Its semantics as following; 
+if x=v1 then assign v2 to x else block. This is used to model lock command originally specified in the paper as lcas(lockvar)(0)(1).
+6. Paper corresponding to this tool is uploaded a tar
+
 Compiling and Running ProofTraPar
 
 1. run ./configure
