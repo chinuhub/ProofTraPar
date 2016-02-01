@@ -19,7 +19,8 @@ http://stackoverflow.com/questions/23182765/how-to-install-ia32-libs-in-ubuntu-1
 
 5. In the language of input programs we use lcas(x)(v1)(v2) to represent blocking lcas command. Its semantics as following; 
 if x=v1 then assign v2 to x else block. This is used to model lock command originally specified in the paper as lcas(lockvar)(0)(1).
-6. Paper corresponding to this tool is uploaded a tar
+
+6. Paper corresponding to this tool is uploaded a in arxiv with name 'From Traces To Proofs: Proving Concurrent Programs Safe'.
 
 Compiling and Running ProofTraPar
 
