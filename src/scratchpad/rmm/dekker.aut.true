@@ -1,0 +1,19 @@
+digraph {
+		0 -> 1[label="w(f1)(1)"];
+		1 -> 2[label="r(f2)(lv1)"];
+		2 -> 3[label="assume(lv1>=1)"];
+		2 -> 4[label="assume(lv1<1)"];
+		3 -> 5[label="r(turn)(lv2)"];
+		5 -> 6[label="assume(lv2==0)"];
+		5 -> 7[label="assume(~(lv2==0))"];
+		7 -> 8[label="w(f1)(1)"];
+		8 -> 9[label="r(turn)(lv3)"];
+		9 -> 10[label="assume(lv3==0)"];
+		10 -> 11[label="w(f1)(1)"];
+		11 -> 2[label="r(f2)(lv1)"];
+		6 -> 2[label="r(f2)(lv1)"];	
+		4 -> 12[label="w(cs)(1)"];
+		12 -> 13[label="r(cs)(lv4)"];
+		13 -> 14[label="w(turn)(1)"];
+		14 -> 0[label="w(f1)(0)"];
+	}

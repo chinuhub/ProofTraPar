@@ -1,0 +1,74 @@
+digraph "unnamed" {
+"0" [
+fixedsize="false",
+label="0",
+regular="false",
+];
+"1" [
+fixedsize="false",
+label="1",
+regular="false",
+];
+"2" [
+fixedsize="false",
+label="2",
+regular="false",
+];
+"3" [
+fixedsize="false",
+label="3",
+regular="false",
+];
+"6" [
+fixedsize="false",
+label="6",
+regular="false",
+];
+"0" -> "1" [
+constraint="true",
+decorate="false",
+label="p:w(lset)(0)",
+labelfloat="false",
+];
+"1" -> "2" [
+constraint="true",
+decorate="false",
+label="q:w(work)(1)",
+labelfloat="false",
+];
+"2" -> "3" [
+constraint="true",
+decorate="false",
+label="r:r(latch)(l7)",
+labelfloat="false",
+];
+"3" -> "6" [
+constraint="true",
+decorate="false",
+label="Q:a(l7==1)",
+labelfloat="false",
+];
+"6" -> "0" [
+constraint="true",
+decorate="false",
+label="t:w(lset)(1)",
+labelfloat="false",
+];
+"8" [
+fixedsize="false",
+label="8",
+regular="false",
+];
+"8" -> "6" [
+constraint="true",
+decorate="false",
+label="s:w(latch)(1)",
+labelfloat="false",
+];
+"3" -> "8" [
+constraint="true",
+decorate="false",
+label="P:a(l7==0)",
+labelfloat="false",
+];
+}

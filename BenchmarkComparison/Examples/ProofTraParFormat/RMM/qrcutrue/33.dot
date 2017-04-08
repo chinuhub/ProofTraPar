@@ -1,0 +1,434 @@
+digraph "machine" {
+"automaton_node_1_0" [
+fixedsize="false",
+label="0",
+regular="false",
+];
+"automaton_node_1_0" -> "automaton_node_1_1" [
+constraint="true",
+decorate="false",
+label="K:lcas(lock,0,1)",
+labelfloat="false",
+];
+"automaton_node_1_1" [
+fixedsize="false",
+label="1",
+regular="false",
+];
+"automaton_node_1_1" -> "automaton_node_1_2" [
+constraint="true",
+decorate="false",
+label="L:r(rp1)(rs1)",
+labelfloat="false",
+];
+"automaton_node_1_2" [
+fixedsize="false",
+label="2",
+regular="false",
+];
+"automaton_node_1_2" -> "automaton_node_1_3" [
+constraint="true",
+decorate="false",
+label="M:r(rp2)(rs2)",
+labelfloat="false",
+];
+"automaton_node_1_3" [
+fixedsize="false",
+label="3",
+regular="false",
+];
+"automaton_node_1_3" -> "automaton_node_1_4" [
+constraint="true",
+decorate="false",
+label="N:w(lock := 0)",
+labelfloat="false",
+];
+"automaton_node_1_4" [
+fixedsize="false",
+label="4",
+regular="false",
+];
+"automaton_node_1_4" -> "automaton_node_1_5" [
+constraint="true",
+decorate="false",
+label="O:$sum := ctr1",
+labelfloat="false",
+];
+"automaton_node_1_5" [
+fixedsize="false",
+label="5",
+regular="false",
+];
+"automaton_node_1_5" -> "automaton_node_1_6" [
+constraint="true",
+decorate="false",
+label="P:$sum2 := ctr2",
+labelfloat="false",
+];
+"automaton_node_1_6" [
+fixedsize="false",
+label="6",
+regular="false",
+];
+"automaton_node_1_6" -> "automaton_node_1_7" [
+constraint="true",
+decorate="false",
+label="Q:assume($sum) + ($sum2) <= 1",
+labelfloat="false",
+];
+"automaton_node_1_6" -> "automaton_node_1_10" [
+constraint="true",
+decorate="false",
+label="R:assume(not[($sum) + ($sum2) <= 1)",
+labelfloat="false",
+];
+"automaton_node_1_7" [
+fixedsize="false",
+label="7",
+regular="false",
+];
+"automaton_node_1_7" -> "automaton_node_1_8" [
+constraint="true",
+decorate="false",
+label="O:$sum := ctr1",
+labelfloat="false",
+];
+"automaton_node_1_8" [
+fixedsize="false",
+label="8",
+regular="false",
+];
+"automaton_node_1_8" -> "automaton_node_1_9" [
+constraint="true",
+decorate="false",
+label="P:$sum2 := ctr2",
+labelfloat="false",
+];
+"automaton_node_1_9" [
+fixedsize="false",
+label="9",
+regular="false",
+];
+"automaton_node_1_9" -> "automaton_node_1_10" [
+constraint="true",
+decorate="false",
+label="R:assumenot[($sum) + ($sum2) <= 1]",
+labelfloat="false",
+];
+"automaton_node_1_9" -> "automaton_node_1_30" [
+constraint="true",
+decorate="false",
+label="Q:assume: ($sum) + ($sum2) <= 1",
+labelfloat="false",
+];
+"automaton_node_1_10" [
+fixedsize="false",
+label="10",
+regular="false",
+];
+"automaton_node_1_10" -> "automaton_node_1_11" [
+constraint="true",
+decorate="false",
+label="S:lcas(mutex,0,1)",
+labelfloat="false",
+];
+"automaton_node_1_11" [
+fixedsize="false",
+label="11",
+regular="false",
+];
+"automaton_node_1_11" -> "automaton_node_1_12" [
+constraint="true",
+decorate="false",
+label="T:$ridx := idx",
+labelfloat="false",
+];
+"automaton_node_1_12" [
+fixedsize="false",
+label="12",
+regular="false",
+];
+"automaton_node_1_12" -> "automaton_node_1_18" [
+constraint="true",
+decorate="false",
+label="U:assume: not[$ridx <= 0]",
+labelfloat="false",
+];
+"automaton_node_1_12" -> "automaton_node_1_13" [
+constraint="true",
+decorate="false",
+label="V:assume: $ridx <= 0",
+labelfloat="false",
+];
+"automaton_node_1_13" [
+fixedsize="false",
+label="13",
+regular="false",
+];
+"automaton_node_1_13" -> "automaton_node_1_14" [
+constraint="true",
+decorate="false",
+label="W:$rctr := ctr2",
+labelfloat="false",
+];
+"automaton_node_1_14" [
+fixedsize="false",
+label="14",
+regular="false",
+];
+"automaton_node_1_14" -> "automaton_node_1_15" [
+constraint="true",
+decorate="false",
+label="X:ctr2 := ($rctr) + (1)",
+labelfloat="false",
+];
+"automaton_node_1_15" [
+fixedsize="false",
+label="15",
+regular="false",
+];
+"automaton_node_1_15" -> "automaton_node_1_16" [
+constraint="true",
+decorate="false",
+label="Y:idx := 1",
+labelfloat="false",
+];
+"automaton_node_1_16" [
+fixedsize="false",
+label="16",
+regular="false",
+];
+"automaton_node_1_16" -> "automaton_node_1_17" [
+constraint="true",
+decorate="false",
+label="Z:$rctr := ctr1",
+labelfloat="false",
+];
+"automaton_node_1_17" [
+fixedsize="false",
+label="17",
+regular="false",
+];
+"automaton_node_1_17" -> "automaton_node_1_23" [
+constraint="true",
+decorate="false",
+label="ZA:ctr1 := ($rctr) - (1)",
+labelfloat="false",
+];
+"automaton_node_1_18" [
+fixedsize="false",
+label="18",
+regular="false",
+];
+"automaton_node_1_18" -> "automaton_node_1_19" [
+constraint="true",
+decorate="false",
+label="Z:$rctr := ctr1",
+labelfloat="false",
+];
+"automaton_node_1_19" [
+fixedsize="false",
+label="19",
+regular="false",
+];
+"automaton_node_1_19" -> "automaton_node_1_20" [
+constraint="true",
+decorate="false",
+label="ZB: ctr1 := ($rctr) + (1)",
+labelfloat="false",
+];
+"automaton_node_1_20" [
+fixedsize="false",
+label="20",
+regular="false",
+];
+"automaton_node_1_20" -> "automaton_node_1_21" [
+constraint="true",
+decorate="false",
+label="ZC: idx := 0",
+labelfloat="false",
+];
+"automaton_node_1_21" [
+fixedsize="false",
+label="21",
+regular="false",
+];
+"automaton_node_1_21" -> "automaton_node_1_22" [
+constraint="true",
+decorate="false",
+label="W:$rctr := ctr2",
+labelfloat="false",
+];
+"automaton_node_1_22" [
+fixedsize="false",
+label="22",
+regular="false",
+];
+"automaton_node_1_22" -> "automaton_node_1_23" [
+constraint="true",
+decorate="false",
+label="ZD:ctr2 := ($rctr) - (1)",
+labelfloat="false",
+];
+"automaton_node_1_23" [
+fixedsize="false",
+label="23",
+regular="false",
+];
+"automaton_node_1_23" -> "automaton_node_1_24" [
+constraint="true",
+decorate="false",
+label="T:$ridx := idx",
+labelfloat="false",
+];
+"automaton_node_1_24" [
+fixedsize="false",
+label="24",
+regular="false",
+];
+"automaton_node_1_24" -> "automaton_node_1_25" [
+constraint="true",
+decorate="false",
+label="V:assume$ridx <= 0",
+labelfloat="false",
+];
+"automaton_node_1_24" -> "automaton_node_1_27" [
+constraint="true",
+decorate="false",
+label="U:assume: not[$ridx <= 0]",
+labelfloat="false",
+];
+"automaton_node_1_25" [
+fixedsize="false",
+label="BK1: 25",
+regular="false",
+];
+"automaton_node_1_25" -> "automaton_node_1_26" [
+constraint="true",
+decorate="false",
+label="Z:read: $rctr := ctr1",
+labelfloat="false",
+];
+"automaton_node_1_26" [
+fixedsize="false",
+label="26",
+regular="false",
+];
+"automaton_node_1_26" -> "automaton_node_1_25" [
+constraint="true",
+decorate="false",
+label="ZE:assume: $rctr > 0",
+labelfloat="false",
+];
+"automaton_node_1_26" -> "automaton_node_1_29" [
+constraint="true",
+decorate="false",
+label="ZF:assume: not[$rctr > 0]",
+labelfloat="false",
+];
+"automaton_node_1_27" [
+fixedsize="false",
+label="BK2: 27",
+regular="false",
+];
+"automaton_node_1_27" -> "automaton_node_1_28" [
+constraint="true",
+decorate="false",
+label="W:read: $rctr := ctr2",
+labelfloat="false",
+];
+"automaton_node_1_28" [
+fixedsize="false",
+label="28",
+regular="false",
+];
+"automaton_node_1_28" -> "automaton_node_1_27" [
+constraint="true",
+decorate="false",
+label="ZE:assume: $rctr > 0",
+labelfloat="false",
+];
+"automaton_node_1_28" -> "automaton_node_1_29" [
+constraint="true",
+decorate="false",
+label="ZF:assume: not[$rctr > 0]",
+labelfloat="false",
+];
+"automaton_node_1_29" [
+fixedsize="false",
+label="29",
+regular="false",
+];
+"automaton_node_1_29" -> "automaton_node_1_30" [
+constraint="true",
+decorate="false",
+label="ZG:write: mutex := 0",
+labelfloat="false",
+];
+"automaton_node_1_30" [
+fixedsize="false",
+label="ext: 30",
+regular="false",
+];
+"automaton_node_1_30" -> "automaton_node_1_31" [
+constraint="true",
+decorate="false",
+label="K:locked{{ read: lock = 0; write: lock := 1 } }",
+labelfloat="false",
+];
+"automaton_node_1_31" [
+fixedsize="false",
+label="31",
+regular="false",
+];
+"automaton_node_1_31" -> "automaton_node_1_32" [
+constraint="true",
+decorate="false",
+label="ZH:read: $rpp1 := rp1",
+labelfloat="false",
+];
+"automaton_node_1_32" [
+fixedsize="false",
+label="32",
+regular="false",
+];
+"automaton_node_1_32" -> "automaton_node_1_33" [
+constraint="true",
+decorate="false",
+label="ZI:read: $rpp2 := rp2",
+labelfloat="false",
+];
+"automaton_node_1_33" [
+fixedsize="false",
+label="33",
+regular="false",
+];
+"automaton_node_1_38" [
+fixedsize="false",
+label="38",
+regular="false",
+];
+"34" [
+fixedsize="false",
+label="34",
+regular="false",
+];
+"automaton_node_1_33" -> "34" [
+constraint="true",
+decorate="false",
+label="ZJ:assume(rs1==1 && rpp1==1)",
+labelfloat="false",
+];
+"34" -> "automaton_node_1_38" [
+constraint="true",
+decorate="false",
+label="N:lock:=0",
+labelfloat="false",
+];
+"automaton_node_1_33" -> "34" [
+constraint="true",
+decorate="false",
+label="ZK:assume(rs2==1 && rpp2==1)",
+labelfloat="false",
+];
+}

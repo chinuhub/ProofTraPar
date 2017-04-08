@@ -1,0 +1,124 @@
+digraph "unnamed" {
+"0" [
+fixedsize="false"
+label="0"
+regular="false"
+];
+"1" [
+fixedsize="false"
+label="1"
+regular="false"
+];
+"2" [
+fixedsize="false"
+label="2"
+regular="false"
+];
+"3" [
+fixedsize="false"
+label="3"
+regular="false"
+];
+"4" [
+fixedsize="false"
+label="4"
+regular="false"
+];
+"5" [
+fixedsize="false"
+label="5"
+regular="false"
+];
+"0" -> "1" [
+constraint="true"
+decorate="false"
+label="a:msg:=0"
+labelfloat="false"
+];
+"1" -> "2" [
+constraint="true"
+decorate="false"
+label="b:l1:=ack"
+labelfloat="false"
+];
+"3" -> "4" [
+constraint="true"
+decorate="false"
+label="c:msg:=1"
+labelfloat="false"
+];
+"4" -> "5" [
+constraint="true"
+decorate="false"
+label="b:l1:=ack"
+labelfloat="false"
+];
+"2" -> "0" [
+constraint="true"
+decorate="false"
+label="B:a(l1!=0)"
+labelfloat="false"
+];
+"5" -> "3" [
+constraint="true"
+decorate="false"
+label="C:a(l1!=1)"
+labelfloat="false"
+];
+"6" [
+fixedsize="false"
+label="6"
+regular="false"
+];
+"7" [
+fixedsize="false"
+label="7"
+regular="false"
+];
+"8" [
+fixedsize="false"
+label="8"
+regular="false"
+];
+"9" [
+fixedsize="false"
+label="9"
+regular="false"
+];
+"2" -> "6" [
+constraint="true"
+decorate="false"
+label="A:a(l1==0)"
+labelfloat="false"
+];
+"6" -> "7" [
+constraint="true"
+decorate="false"
+label="l:inres2:=0"
+labelfloat="false"
+];
+"7" -> "3" [
+constraint="true"
+decorate="false"
+label="m:l5:=inres2"
+labelfloat="false"
+];
+"5" -> "8" [
+constraint="true"
+decorate="false"
+label="D:a(l1==1)"
+labelfloat="false"
+];
+"8" -> "9" [
+constraint="true"
+decorate="false"
+label="n:inres3:=0"
+labelfloat="false"
+];
+"9" -> "0" [
+constraint="true"
+decorate="false"
+label="o:l6:=inres3"
+labelfloat="false"
+];
+}

@@ -1,0 +1,62 @@
+Init:idx=0,ctr1=1,ctr2=0,rp1=0,rp2=0,mutex=0,lk=0,sum=0
+Proc:1
+a:r(idx)(myidx1)
+A:lcas(lk)(0)(1)
+B:assume(myidx1<=0 && ctr1>0)
+C:assume(myidx1>0 && ctr2>0)
+b:w(ctr1)(ctr1+1)
+c:w(ctr2)(ctr2+1)
+d:w(lk)(0)
+e:w(rp1)(1)
+f:w(rp1)(2)
+D:assume(myidx1<=0)
+E:assume(myidx1>0)
+h:w(ctr1)(ctr1-1)
+g:w(ctr2)(ctr2-1)
+AMap:
+Regex:qrcufalse/11.dot
+Proc:2
+i:r(idx)(myidx2)
+j:lcas(lk)(0)(1)
+G:assume(myidx2<=0 && ctr1>0)
+F:assume(myidx2>0 && ctr2>0)
+k:w(ctr2)(ctr2+1)
+l:w(ctr1)(ctr1+1)
+m:w(lk)(0)
+n:w(rp2)(1)
+o:w(rp2)(2)
+I:assume(myidx2<=0)
+H:assume(myidx2>0)
+y:w(ctr2)(ctr2-1)
+z:w(ctr1)(ctr1-1)
+AMap:
+Regex:qrcufalse/22.dot
+Proc:3
+K:lcas(lk)(0)(1)
+L:w(rs1)(1)
+M:w(rs2)(2)
+N:w(lk)(0)
+O:w(sum)(ctr1)
+P:w(sum)(ctr2)
+Q:w(sum)(sum+ctr2)
+R:w(sum)(sum+ctr1)
+T:assume(sum<=1)
+S:assume(sum>1)
+U:lcas(mutex)(0)(1)
+W:assume(idx>0)
+V:assume(idx<=0)
+X:w(ctr2)(ctr2+1)
+Y:w(ctr1)(ctr1+1)
+p:w(idx)(0)
+Z:w(idx)(1)
+q:w(ctr1)(ctr1-1)
+r:w(ctr2)(ctr2-1)
+s:assume(ctr2<=0)
+t:assume(ctr1<=0)
+u:w(mutex)(0)
+v:assume(rs1==1 && rp1==1)
+w:assume(rs2==1 && rp2==1)
+AMap:
+v:false
+w:false
+Regex:qrcufalse/33.dot

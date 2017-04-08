@@ -1,0 +1,10 @@
+digraph {
+		0 -> 1[label="a"];
+		1 -> 2[label="b"];
+		2 -> 3[label="A"];
+		3 -> 4[label="g"];
+		4 -> 5[label="h"];
+		5 -> 0[label="i"];
+	}
+	
+

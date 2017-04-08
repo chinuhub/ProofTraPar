@@ -1,0 +1,25 @@
+Init:f1=0,f2=0,turn=0,res=0
+Proc:1
+a:w(f1)(1)
+b:w(turn)(1)
+c:r(f2)(l)
+d:r(turn)(m)
+A:assume(l==0 || m==0)
+g:w(res)(0)
+h:r(res)(ph3)
+i:w(f1)(0)
+AMap:
+h:(ph3==0)
+Regex:(abcdAghi)+
+Proc:2
+p:w(f2)(1)
+q:w(turn)(0)
+r:r(f1)(n)
+s:r(turn)(o)
+P:assume(n==0 || o==1)
+t:w(res)(1)
+u:r(res)(ph3p)
+v:w(f2)(0)
+AMap:
+u:ph3p==1
+Regex:(pqrsPtuv)+

@@ -1,0 +1,241 @@
+digraph "unnamed" {
+"1" [
+fixedsize="false"
+label="1"
+regular="false"
+];
+"2" [
+fixedsize="false"
+label="2"
+regular="false"
+];
+"3" [
+fixedsize="false"
+label="3"
+regular="false"
+];
+"4" [
+fixedsize="false"
+label="4"
+regular="false"
+];
+"5" [
+fixedsize="false"
+label="5"
+regular="false"
+];
+"6" [
+fixedsize="false"
+label="6"
+regular="false"
+];
+"7" [
+fixedsize="false"
+label="7"
+regular="false"
+];
+"8" [
+fixedsize="false"
+label="8"
+regular="false"
+];
+"1" -> "2" [
+constraint="true"
+decorate="false"
+label="A:assume(i2==0)"
+labelfloat="false"
+];
+"1" -> "3" [
+constraint="true"
+decorate="false"
+label="B:assume(i2==1)"
+labelfloat="false"
+];
+"1" -> "4" [
+constraint="true"
+decorate="false"
+label="C:assume(i2==2)"
+labelfloat="false"
+];
+"2" -> "5" [
+constraint="true"
+decorate="false"
+label="b:w(a0)(1)"
+labelfloat="false"
+];
+"3" -> "5" [
+constraint="true"
+decorate="false"
+label="c:w(a1)(1)"
+labelfloat="false"
+];
+"4" -> "5" [
+constraint="true"
+decorate="false"
+label="d:w(a2)(1)"
+labelfloat="false"
+];
+"5" -> "6" [
+constraint="true"
+decorate="false"
+label="e:r(lock)(p2)"
+labelfloat="false"
+];
+"6" -> "7" [
+constraint="true"
+decorate="false"
+label="f:lcas(lock,p2,i2)"
+labelfloat="false"
+];
+"8" [
+fixedsize="false"
+label="8"
+regular="false"
+];
+"9" [
+fixedsize="false"
+label="9"
+regular="false"
+];
+"10" [
+fixedsize="false"
+label="10"
+regular="false"
+];
+"11" [
+fixedsize="false"
+label="11"
+regular="false"
+];
+"12" [
+fixedsize="false"
+label="12"
+regular="false"
+];
+"8" -> "12" [
+constraint="true"
+decorate="false"
+label="g:w(a0)(0)"
+labelfloat="false"
+];
+"10" -> "12" [
+constraint="true"
+decorate="false"
+label="h:w(a1)(0)"
+labelfloat="false"
+];
+"11" -> "12" [
+constraint="true"
+decorate="false"
+label="i:w(a2)(0)"
+labelfloat="false"
+];
+"12" -> "1" [
+constraint="true"
+decorate="false"
+label="j:w(i2)(p2)"
+labelfloat="false"
+];
+"0" [
+fixedsize="false"
+label="0"
+regular="false"
+];
+"0" -> "1" [
+constraint="true"
+decorate="false"
+label="a:w(i2)(0)"
+labelfloat="false"
+];
+"13" [
+fixedsize="false"
+label="13"
+regular="false"
+];
+"14" [
+fixedsize="false"
+label="14"
+regular="false"
+];
+"9" -> "13" [
+constraint="true"
+decorate="false"
+label="ba:w(incs)(0)"
+labelfloat="false"
+];
+"13" -> "14" [
+constraint="true"
+decorate="false"
+label="bb:r(incs)(incs2)"
+labelfloat="false"
+];
+"14" -> "8" [
+constraint="true"
+decorate="false"
+label="A:assume(i2==0)"
+labelfloat="false"
+];
+"14" -> "10" [
+constraint="true"
+decorate="false"
+label="B:assume(i2==1)"
+labelfloat="false"
+];
+"14" -> "11" [
+constraint="true"
+decorate="false"
+label="C:assume(i2==2)"
+labelfloat="false"
+];
+"15" [
+fixedsize="false"
+label="15"
+regular="false"
+];
+"16" [
+fixedsize="false"
+label="16"
+regular="false"
+];
+"17" [
+fixedsize="false"
+label="17"
+regular="false"
+];
+"7" -> "15" [
+constraint="true"
+decorate="false"
+label="EO:assume(p2==1)"
+labelfloat="false"
+];
+"15" -> "9" [
+constraint="true"
+decorate="false"
+label="ET:assume(a1==0)"
+labelfloat="false"
+];
+"7" -> "16" [
+constraint="true"
+decorate="false"
+label="DO:assume(p2==0)"
+labelfloat="false"
+];
+"16" -> "9" [
+constraint="true"
+decorate="false"
+label="DT:assume(a0==0)"
+labelfloat="false"
+];
+"17" -> "9" [
+constraint="true"
+decorate="false"
+label="FT:assume(a2==0)"
+labelfloat="false"
+];
+"7" -> "17" [
+constraint="true"
+decorate="false"
+label="FO:assume(p2==2)"
+labelfloat="false"
+];
+}

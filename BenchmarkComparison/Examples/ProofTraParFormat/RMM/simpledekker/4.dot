@@ -1,0 +1,107 @@
+digraph "unnamed" {
+"0" [
+fixedsize="false"
+label="0"
+regular="false"
+];
+"1" [
+fixedsize="false"
+label="1"
+regular="false"
+];
+"2" [
+fixedsize="false"
+label="2"
+regular="false"
+];
+"3" [
+fixedsize="false"
+label="3"
+regular="false"
+];
+"4" [
+fixedsize="false"
+label="4"
+regular="false"
+];
+"5" [
+fixedsize="false"
+label="5"
+regular="false"
+];
+"7" [
+fixedsize="false"
+label="7"
+regular="false"
+];
+"8" [
+fixedsize="false"
+label="8"
+regular="false"
+];
+"9" [
+fixedsize="false"
+label="9"
+regular="false"
+];
+"0" -> "1" [
+constraint="true"
+decorate="false"
+label="v:w(f4)(1)"
+labelfloat="false"
+];
+"1" -> "2" [
+constraint="true"
+decorate="false"
+label="w:r(f1)(l41)"
+labelfloat="false"
+];
+"2" -> "3" [
+constraint="true"
+decorate="false"
+label="x:r(f2)(l42)"
+labelfloat="false"
+];
+"3" -> "4" [
+constraint="true"
+decorate="false"
+label="y:r(f3)(43)"
+labelfloat="false"
+];
+"7" -> "8" [
+constraint="true"
+decorate="false"
+label="z:w(res)(4)"
+labelfloat="false"
+];
+"8" -> "9" [
+constraint="true"
+decorate="false"
+label="za:r(res)(l45)"
+labelfloat="false"
+];
+"9" -> "0" [
+constraint="true"
+decorate="false"
+label="zb:w(f4)(0)"
+labelfloat="false"
+];
+"4" -> "7" [
+constraint="true"
+decorate="false"
+label="G:assume(not phi)"
+labelfloat="false"
+];
+"4" -> "5" [
+constraint="true"
+decorate="false"
+label="H:assume(l12==1||l11==1||l13==1)"
+labelfloat="false"
+];
+"5" -> "0" [
+constraint="true"
+decorate="false"
+label="zb:w(f4)(0)"
+labelfloat="false"
+];
+}

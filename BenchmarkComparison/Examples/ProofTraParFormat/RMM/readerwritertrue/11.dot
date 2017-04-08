@@ -1,0 +1,101 @@
+digraph "unnamed" {
+"0" [
+fixedsize="false"
+label="0"
+regular="false"
+];
+"1" [
+fixedsize="false"
+label="1"
+regular="false"
+];
+"2" [
+fixedsize="false"
+label="2"
+regular="false"
+];
+"3" [
+fixedsize="false"
+label="3"
+regular="false"
+];
+"4" [
+fixedsize="false"
+label="4"
+regular="false"
+];
+"5" [
+fixedsize="false"
+label="5"
+regular="false"
+];
+"6" [
+fixedsize="false"
+label="6"
+regular="false"
+];
+"7" [
+fixedsize="false"
+label="7"
+regular="false"
+];
+"0" -> "1" [
+constraint="true"
+decorate="false"
+label="a:lcas(lk,0,1)"
+labelfloat="false"
+];
+"1" -> "2" [
+constraint="true"
+decorate="false"
+label="aa:r(w)(rw)"
+labelfloat="false"
+];
+"2" -> "3" [
+constraint="true"
+decorate="false"
+label="ab:r(r)(rr)"
+labelfloat="false"
+];
+"3" -> "4" [
+constraint="true"
+decorate="false"
+label="A:assume(phi)"
+labelfloat="false"
+];
+"4" -> "5" [
+constraint="true"
+decorate="false"
+label="b:w(w)(1)"
+labelfloat="false"
+];
+"5" -> "6" [
+constraint="true"
+decorate="false"
+label="c:w(lk)(0)"
+labelfloat="false"
+];
+"8" [
+fixedsize="false"
+label="8"
+regular="false"
+];
+"7" -> "8" [
+constraint="true"
+decorate="false"
+label="e:w(w)(0)"
+labelfloat="false"
+];
+"6" -> "7" [
+constraint="true"
+decorate="false"
+label="d:w(x)(3)"
+labelfloat="false"
+];
+"3" -> "1" [
+constraint="true"
+decorate="false"
+label="AA:assume(not phi)"
+labelfloat="false"
+];
+}

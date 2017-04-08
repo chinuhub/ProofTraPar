@@ -1,0 +1,140 @@
+digraph "unnamed" {
+"0" [
+fixedsize="false",
+label="0",
+regular="false",
+];
+"1" [
+fixedsize="false",
+label="1",
+regular="false",
+];
+"2" [
+fixedsize="false",
+label="2",
+regular="false",
+];
+"3" [
+fixedsize="false",
+label="3",
+regular="false",
+];
+"4" [
+fixedsize="false",
+label="4",
+regular="false",
+];
+"5" [
+fixedsize="false",
+label="5",
+regular="false",
+];
+"6" [
+fixedsize="false",
+label="6",
+regular="false",
+];
+"7" [
+fixedsize="false",
+label="7",
+regular="false",
+];
+"0" -> "1" [
+constraint="true",
+decorate="false",
+label="p:f2:=1",
+labelfloat="false",
+];
+"1" -> "2" [
+constraint="true",
+decorate="false",
+label="P:a(f1<3)",
+labelfloat="false",
+];
+"2" -> "3" [
+constraint="true",
+decorate="false",
+label="q:f2:=3",
+labelfloat="false",
+];
+"3" -> "4" [
+constraint="true",
+decorate="false",
+label="Q:a(f1=1)",
+labelfloat="false",
+];
+"3" -> "6" [
+constraint="true",
+decorate="false",
+label="R:a(f1!=1)",
+labelfloat="false",
+];
+"4" -> "5" [
+constraint="true",
+decorate="false",
+label="r:f2:=2",
+labelfloat="false",
+];
+"5" -> "6" [
+constraint="true",
+decorate="false",
+label="S:a(f1=4)",
+labelfloat="false",
+];
+"6" -> "7" [
+constraint="true",
+decorate="false",
+label="s:f2:=4",
+labelfloat="false",
+];
+"8" [
+fixedsize="false",
+label="8",
+regular="false",
+];
+"9" [
+fixedsize="false",
+label="9",
+regular="false",
+];
+"10" [
+fixedsize="false",
+label="10",
+regular="false",
+];
+"11" [
+fixedsize="false",
+label="11",
+regular="false",
+];
+"7" -> "8" [
+constraint="true",
+decorate="false",
+label="T:a(f1<2)",
+labelfloat="false",
+];
+"8" -> "9" [
+constraint="true",
+decorate="false",
+label="v:res:=2",
+labelfloat="false",
+];
+"9" -> "10" [
+constraint="true",
+decorate="false",
+label="w:ph2:=res",
+labelfloat="false",
+];
+"10" -> "11" [
+constraint="true",
+decorate="false",
+label="U:a(f1<2 || f1>3)",
+labelfloat="false",
+];
+"11" -> "0" [
+constraint="true",
+decorate="false",
+label="x:f2:=0",
+labelfloat="false",
+];
+}

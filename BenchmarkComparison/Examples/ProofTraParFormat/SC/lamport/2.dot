@@ -1,0 +1,22 @@
+digraph {
+		0 -> 1[label="p"];
+		1 -> 2[label="q"];
+		2 -> 3[label="P"];
+		2 -> 4[label="Q"];
+		4 -> 5[label="r"];
+		5 -> 0[label="P"];
+		3 -> 6[label="s"];
+		6 -> 7[label="S"];
+		6 -> 12[label="R"];
+		7 -> 8[label="r"];
+		8 -> 9[label="T"];
+		9 -> 10[label="V"];
+		10 -> 0[label="P"];
+		9 -> 12[label="U"];
+		12 -> 13[label="t"];
+		13 -> 14[label="u"];
+		14 -> 15[label="v"];
+		15 -> 16[label="r"];
+	}
+	
+

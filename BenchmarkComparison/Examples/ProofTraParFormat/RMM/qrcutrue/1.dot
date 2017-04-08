@@ -1,0 +1,206 @@
+digraph "unnamed" {
+"0" [
+fixedsize="false"
+label="0"
+regular="false"
+];
+"1" [
+fixedsize="false"
+label="1"
+regular="false"
+];
+"0" -> "1" [
+constraint="false"
+decorate="false"
+label="a:myidx:=idx"
+labelfloat="false"
+];
+"2" [
+fixedsize="false"
+label="2"
+regular="false"
+];
+"4" [
+fixedsize="false"
+label="4"
+regular="false"
+];
+"5" [
+fixedsize="false"
+label="5"
+regular="false"
+];
+"6" [
+fixedsize="false"
+label="6"
+regular="false"
+];
+"2" -> "4" [
+constraint="true"
+decorate="false"
+label="C:A(myidx>0 and lctr2>0)"
+labelfloat="false"
+];
+"8" [
+fixedsize="false"
+label="8"
+regular="false"
+];
+"9" [
+fixedsize="false"
+label="9"
+regular="false"
+];
+"10" [
+fixedsize="false"
+label="10"
+regular="false"
+];
+"11" [
+fixedsize="false"
+label="11"
+regular="false"
+];
+"12" [
+fixedsize="false"
+label="12"
+regular="false"
+];
+"6" -> "8" [
+constraint="true"
+decorate="false"
+label="d:lk:=0"
+labelfloat="false"
+];
+"8" -> "9" [
+constraint="true"
+decorate="false"
+label="e:rp1:=1"
+labelfloat="false"
+];
+"9" -> "10" [
+constraint="true"
+decorate="false"
+label="f:rp1:=2"
+labelfloat="false"
+];
+"10" -> "11" [
+constraint="true"
+decorate="false"
+label="A:lcas(lk)(0)(1)"
+labelfloat="false"
+];
+"11" -> "12" [
+constraint="true"
+decorate="false"
+label="E:A(myidx>0)"
+labelfloat="false"
+];
+"13" [
+fixedsize="false"
+label="13"
+regular="false"
+];
+"14" [
+fixedsize="false"
+label="14"
+regular="false"
+];
+"11" -> "13" [
+constraint="true"
+decorate="false"
+label="D:A(myidx<=0)"
+labelfloat="false"
+];
+"15" [
+fixedsize="false"
+label="15"
+regular="false"
+];
+"14" -> "15" [
+constraint="true"
+decorate="false"
+label="d:lk:=0"
+labelfloat="false"
+];
+"16" [
+fixedsize="false"
+label="16"
+regular="false"
+];
+"17" [
+fixedsize="false"
+label="17"
+regular="false"
+];
+"18" [
+fixedsize="false"
+label="18"
+regular="false"
+];
+"19" [
+fixedsize="false"
+label="19"
+regular="false"
+];
+"12" -> "18" [
+constraint="true"
+decorate="false"
+label="gr:r(ctr2)(lctr2)"
+labelfloat="false"
+];
+"18" -> "14" [
+constraint="true"
+decorate="false"
+label="gw:w(ctr2)(lctr2-1)"
+labelfloat="false"
+];
+"13" -> "19" [
+constraint="true"
+decorate="false"
+label="hr:r(ctr1)(lctr1)"
+labelfloat="false"
+];
+"19" -> "14" [
+constraint="true"
+decorate="false"
+label="hw:w(ctr1)(lctr1-1)"
+labelfloat="false"
+];
+"2" -> "5" [
+constraint="true"
+decorate="false"
+label="B:A(myidx<=0 and lctr1>0)"
+labelfloat="false"
+];
+"1" -> "16" [
+constraint="true"
+decorate="false"
+label="A:lcas(lk)(0)(1)"
+labelfloat="false"
+];
+"16" -> "17" [
+constraint="true"
+decorate="false"
+label="cr:r(ctr2)(lctr2)"
+labelfloat="false"
+];
+"17" -> "2" [
+constraint="true"
+decorate="false"
+label="br:r(ctr1)(lctr1)"
+labelfloat="false"
+];
+"4" -> "6" [
+constraint="true"
+decorate="false"
+label="cw:w(ctr2)(lctr2+1)"
+labelfloat="false"
+];
+"5" -> "6" [
+constraint="true"
+decorate="false"
+label="bw:w(ctr1)(lctr1+1)"
+labelfloat="false"
+];
+}

@@ -1,0 +1,349 @@
+digraph "unnamed" {
+"0" [
+fixedsize="false",
+label="0",
+regular="false",
+];
+"2" [
+fixedsize="false",
+label="2",
+regular="false",
+];
+"4" [
+fixedsize="false",
+label="4",
+regular="false",
+];
+"5" [
+fixedsize="false",
+label="5",
+regular="false",
+];
+"6" [
+fixedsize="false",
+label="6",
+regular="false",
+];
+"7" [
+fixedsize="false",
+label="7",
+regular="false",
+];
+"4" -> "5" [
+constraint="true",
+decorate="false",
+label="O:Sum:=ctr1",
+labelfloat="false",
+];
+"5" -> "7" [
+constraint="true",
+decorate="false",
+label="Q:sum:=sum+ctr2",
+labelfloat="false",
+];
+"4" -> "6" [
+constraint="true",
+decorate="false",
+label="P:sum:=ctr2",
+labelfloat="false",
+];
+"6" -> "7" [
+constraint="true",
+decorate="false",
+label="R:sum:=sum+ctr1",
+labelfloat="false",
+];
+"8" [
+fixedsize="false",
+label="8",
+regular="false",
+];
+"9" [
+fixedsize="false",
+label="9",
+regular="false",
+];
+"10" [
+fixedsize="false",
+label="10",
+regular="false",
+];
+"11" [
+fixedsize="false",
+label="11",
+regular="false",
+];
+"12" [
+fixedsize="false",
+label="12",
+regular="false",
+];
+"13" [
+fixedsize="false",
+label="13",
+regular="false",
+];
+"14" [
+fixedsize="false",
+label="14",
+regular="false",
+];
+"15" [
+fixedsize="false",
+label="15",
+regular="false",
+];
+"16" [
+fixedsize="false",
+label="16",
+regular="false",
+];
+"7" -> "8" [
+constraint="true",
+decorate="false",
+label="T:A(sum<=1)",
+labelfloat="false",
+];
+"8" -> "9" [
+constraint="true",
+decorate="false",
+label="O:Sum:=ctr1",
+labelfloat="false",
+];
+"8" -> "10" [
+constraint="true",
+decorate="false",
+label="P:sum:=ctr2",
+labelfloat="false",
+];
+"7" -> "11" [
+constraint="true",
+decorate="false",
+label="S:A(sum>1)",
+labelfloat="false",
+];
+"9" -> "11" [
+constraint="true",
+decorate="false",
+label="Q:sum:=sum+ctr2",
+labelfloat="false",
+];
+"10" -> "11" [
+constraint="true",
+decorate="false",
+label="R:sum:=sum+ctr1",
+labelfloat="false",
+];
+"12" [
+fixedsize="false",
+label="12",
+regular="false",
+];
+"13" [
+fixedsize="false",
+label="13",
+regular="false",
+];
+"14" [
+fixedsize="false",
+label="14",
+regular="false",
+];
+"15" [
+fixedsize="false",
+label="15",
+regular="false",
+];
+"16" [
+fixedsize="false",
+label="16",
+regular="false",
+];
+"17" [
+fixedsize="false",
+label="17",
+regular="false",
+];
+"18" [
+fixedsize="false",
+label="18",
+regular="false",
+];
+"19" [
+fixedsize="false",
+label="19",
+regular="false",
+];
+"20" [
+fixedsize="false",
+label="20",
+regular="false",
+];
+"21" [
+fixedsize="false",
+label="21",
+regular="false",
+];
+"22" [
+fixedsize="false",
+label="22",
+regular="false",
+];
+"23" [
+fixedsize="false",
+label="23",
+regular="false",
+];
+"24" [
+fixedsize="false",
+label="24",
+regular="false",
+];
+"25" [
+fixedsize="false",
+label="25",
+regular="false",
+];
+"11" -> "12" [
+constraint="true",
+decorate="false",
+label="S:A(sum>1)",
+labelfloat="false",
+];
+"11" -> "24" [
+constraint="true",
+decorate="false",
+label="T:A(sum<=1)",
+labelfloat="false",
+];
+"12" -> "13" [
+constraint="true",
+decorate="false",
+label="U:lcas(mutex)(0)(1)",
+labelfloat="false",
+];
+"13" -> "14" [
+constraint="true",
+decorate="false",
+label="W:A(idx>0)",
+labelfloat="false",
+];
+"13" -> "17" [
+constraint="true",
+decorate="false",
+label="V:A(idx<=0)",
+labelfloat="false",
+];
+"14" -> "15" [
+constraint="true",
+decorate="false",
+label="Y:ctr1++",
+labelfloat="false",
+];
+"15" -> "16" [
+constraint="true",
+decorate="false",
+label="p:idx:=0",
+labelfloat="false",
+];
+"16" -> "20" [
+constraint="true",
+decorate="false",
+label="r:ctr2--",
+labelfloat="false",
+];
+"17" -> "18" [
+constraint="true",
+decorate="false",
+label="X:ctr2++",
+labelfloat="false",
+];
+"18" -> "19" [
+constraint="true",
+decorate="false",
+label="Z:idx:=1",
+labelfloat="false",
+];
+"19" -> "20" [
+constraint="true",
+decorate="false",
+label="q:ctr1--",
+labelfloat="false",
+];
+"20" -> "21" [
+constraint="true",
+decorate="false",
+label="V:A(idx<=0)",
+labelfloat="false",
+];
+"20" -> "23" [
+constraint="true",
+decorate="false",
+label="W:A(idx>0)",
+labelfloat="false",
+];
+"21" -> "22" [
+constraint="true",
+decorate="false",
+label="s:A(ctr2<=0)",
+labelfloat="false",
+];
+"24" -> "25" [
+constraint="true",
+decorate="false",
+label="K:lcas(lk)(0)(1)",
+labelfloat="false",
+];
+"23" -> "22" [
+constraint="true",
+decorate="false",
+label="t:A(ctr1<=0)",
+labelfloat="false",
+];
+"22" -> "24" [
+constraint="true",
+decorate="false",
+label="u:mutex:=0",
+labelfloat="false",
+];
+"26" [
+fixedsize="false",
+label="26",
+regular="false",
+];
+"27" [
+fixedsize="false",
+label="27",
+regular="false",
+];
+"25" -> "26" [
+constraint="true",
+decorate="false",
+label="v:A(rs1=1 and rp1=1)",
+labelfloat="false",
+];
+"25" -> "26" [
+constraint="true",
+decorate="false",
+label="w:A(rs2=1 and rp2=1)",
+labelfloat="false",
+];
+"26" -> "27" [
+constraint="true",
+decorate="false",
+label="N:lk:=0",
+labelfloat="false",
+];
+"0" -> "2" [
+constraint="true",
+decorate="false",
+label="L:rs1:=1",
+labelfloat="false",
+];
+"2" -> "4" [
+constraint="true",
+decorate="false",
+label="M:rs2:=1",
+labelfloat="false",
+];
+}

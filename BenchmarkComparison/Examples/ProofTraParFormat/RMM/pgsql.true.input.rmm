@@ -1,0 +1,26 @@
+Init:latch=0,latchset=0,work=0,wlocal=0
+Proc:1
+a:w(latch)(0)
+b:r(work)(l1)
+A:assume(l1==1)
+B:assume(l1==0)
+c:w(work)(0)
+f:w(wlocal)(1)
+g:r(latchset)(l3)
+d:r(latch)(l2)
+e:r(wlocal)(l4)
+C:assume(~(l2==1))
+D:assume(l2==1)
+AMap:
+e:~((l3==1) && (l2==0) && (l4==0))
+Regex:pgsql/11.dot
+Proc:2
+p:w(latchset)(0)
+q:w(work)(1)
+r:r(latch)(l7)
+P:assume(l7==0)
+Q:assume(l7==1)
+s:w(latch)(1)
+t:w(latchset)(1)
+AMap:
+Regex:pgsql/22.dot

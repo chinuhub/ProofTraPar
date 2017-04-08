@@ -1,0 +1,22 @@
+digraph {
+		0 -> 1[label="a"];
+		1 -> 2[label="b"];
+		2 -> 3[label="A"];
+		2 -> 4[label="B"];
+		4 -> 5[label="d"];
+		5 -> 0[label="A"];
+		3 -> 6[label="c"];
+		6 -> 7[label="D"];
+		6 -> 12[label="E"];
+		7 -> 8[label="d"];
+		8 -> 9[label="F"];
+		9 -> 10[label="H"];
+		10 -> 0[label="A"];
+		9 -> 12[label="G"];
+		12 -> 13[label="e"];
+		13 -> 14[label="f"];
+		14 -> 15[label="g"];
+		15 -> 16[label="d"];
+	}
+	
+
