@@ -45,10 +45,12 @@ struct autstatecomparator{
 };
 
 Program* AFAut::mProgram;
-
+std::set<AFAStatePtr> AFAut::mAFAOrLitStates;
+std::set<AFAStatePtr> AFAut::mAFAInitStates;
 /**
  * Function to convert an NFA/DFA to an AFA
  */
+/*
 AFAut* AFAut::MakeAFAutFromFA(struct fa* nfa,Program* program, z3::context& ctx){
 	mProgram= program;
 
@@ -58,18 +60,18 @@ AFAut* AFAut::MakeAFAutFromFA(struct fa* nfa,Program* program, z3::context& ctx)
 
 	BOOST_ASSERT_MSG(seenstates.find(nfa->initial)->second==init,"Some serious issue");
 	afa->mInit=init;
-/*
+
 	BOOST_FOREACH(auto t, init->mTransitions){
 		BOOST_FOREACH(auto v, t.second)
 				std::cout<<v<<","<<std::endl;
 	}
 	afa->PrintToDot("tryinside.dot");
-*/
+
 	//complete the AFA
 	//Now before returning, complete the AFA, i.e. for each state, get set of symbols on which it has
 		 	    //transitions, then find where it doesnt have and add an edge from this state on this symbol to error state.
 		 	   z3::expr trueexp = ctx.bool_val(true);
-		 	   AFAStatePtr errorstate= new AFAState(OR,trueexp);
+		 	   AFAStatePtr errorstate= new AFAState(OR,trueexp, *mProgram);
 		 	   SetAFAStatesPtr seterrostate;
 		 	   seterrostate.insert(errorstate);
 		 	   std::set<std::string> allsyms(mProgram->mAllSyms.begin(),mProgram->mAllSyms.end());
@@ -90,7 +92,9 @@ AFAut* AFAut::MakeAFAutFromFA(struct fa* nfa,Program* program, z3::context& ctx)
 		 	   }
 	return afa;
 }
+*/
 
+/*
 AFAStatePtr AFAut::RecMakeAFAutFromFA(struct autstate* state, std::map<struct autstate*, AFAStatePtr>& seenstates,z3::context& ctx)
 {
 //std::cout<<"iter"<<std::endl;
@@ -99,7 +103,7 @@ AFAStatePtr AFAut::RecMakeAFAutFromFA(struct autstate* state, std::map<struct au
 		return seenstates.find(state)->second;
 	}
 	z3::expr trueexp = ctx.bool_val(true);
-	AFAStatePtr st = new AFAState(ORLit,trueexp);
+	AFAStatePtr st = new AFAState(ORLit,trueexp,*mProgram);
 	if(state->accept)
 	{
 #ifdef	DBGPRNT
@@ -130,6 +134,7 @@ AFAStatePtr AFAut::RecMakeAFAutFromFA(struct autstate* state, std::map<struct au
 	return st;
 }
 
+*/
 
 /**
  * Function to construct and AFA corresponding to word w and neg phi as phi
@@ -149,7 +154,7 @@ AFAut* AFAut::MakeAFAutProof(std::string& word, z3::expr& mPhi,Program* p, int c
 			if(res.size()>1){
 								//then it is surely of or type.. claus 1 or clause 2.. create an DisjAND state
 				z3::expr formula = g.as_expr();
-				AFAStatePtr st = new AFAState(OR, word, formula);
+				AFAStatePtr st = new AFAState(OR, word, formula,*mProgram);
 				allStates.insert(std::make_pair(st,st));
 #ifdef	DBGPRNT
 				std::cout<<mPhi<<" found to be a or b or c type "<<std::endl;
@@ -158,9 +163,10 @@ AFAut* AFAut::MakeAFAutProof(std::string& word, z3::expr& mPhi,Program* p, int c
 				afa->mInit=st;
 			}else if(res.size()==1){
 				z3::expr formula = res[0].as_expr();
+
 				if(formula.decl().decl_kind()==Z3_OP_AND)
 				{
-					AFAStatePtr st = new AFAState(AND,word,formula);
+					AFAStatePtr st = new AFAState(AND,word,formula,*mProgram);
 					allStates.insert(std::make_pair(st,st));
 #ifdef	DBGPRNT
 					std::cout<<mPhi<<" found to be a and b and c type "<<std::endl;
@@ -169,7 +175,7 @@ AFAut* AFAut::MakeAFAutProof(std::string& word, z3::expr& mPhi,Program* p, int c
 					afa->mInit = st;
 				}else if(formula.decl().decl_kind()==Z3_OP_OR)
 				{
-					AFAStatePtr st = new AFAState(OR,word,mPhi);
+					AFAStatePtr st = new AFAState(OR,word,mPhi,*mProgram);
 					allStates.insert(std::make_pair(st,st));
 #ifdef	DBGPRNT
 					std::cout<<mPhi<<" found to be a or b type "<<std::endl;
@@ -178,7 +184,7 @@ AFAut* AFAut::MakeAFAutProof(std::string& word, z3::expr& mPhi,Program* p, int c
 					afa->mInit = st;
 				}else
 				{
-					AFAStatePtr st = new AFAState(ORLit,word,mPhi);
+					AFAStatePtr st = new AFAState(ORLit,word,mPhi,*mProgram);
 					allStates.insert(std::make_pair(st,st));
 #ifdef	DBGPRNT
 					std::cout<<mPhi<<" found to be a literal "<<" and type is "<<st->mType<<std::endl;
@@ -190,7 +196,6 @@ AFAut* AFAut::MakeAFAutProof(std::string& word, z3::expr& mPhi,Program* p, int c
 #ifdef DBGPRNT
 			afa->PrintToDot("Pass1.dot");
 #endif
-			afa->PrintToDot("Pass1.dot");
 			std::map<AFAStatePtr,AFAStatePtr,mapstatecomparator> passtwoallstates;
 			if(!afa->mInit->HelperIsUnsat(*(afa->mInit->mHMap)))
 			{
@@ -198,7 +203,7 @@ AFAut* AFAut::MakeAFAutProof(std::string& word, z3::expr& mPhi,Program* p, int c
 				//Still create Pass2 because we would like to check if this error can be solved
 				//or not..
 				afa->mInit->PassTwo(passtwoallstates);
-				afa->PrintToDot("Pass2.dot");
+				//afa->PrintToDot("Pass2.dot");
 				return afa;//to denote that this trace is erroneous
 			}
 			bres=true;
@@ -217,7 +222,6 @@ AFAut* AFAut::MakeAFAutProof(std::string& word, z3::expr& mPhi,Program* p, int c
 			std::cout<<"Pass two ended"<<std::endl;
 			afa->PrintToDot("Pass2.dot");
 #endif
-			afa->PrintToDot("Pass2.dot");
 			//when this call is returned, passtwoallstates contain only those states which survived extinction.. So we can delete all other
 			//states as thy become unreachable as well.\
 			std::set<AFAStatePtr,mapstatecomparator> unreachable;
@@ -246,7 +250,8 @@ AFAut* AFAut::MakeAFAutProof(std::string& word, z3::expr& mPhi,Program* p, int c
 	 	  	}
 	 	  afa->mInit=NULL;
 	 	  delete afa;//no longer in use..
-	 	  std::cout<<"Proofafa done"<<std::endl;
+//	 	  std::cout<<"Proofafa done"<<std::endl;
+
 	 	  return proofafa;
 }
 /**
@@ -257,7 +262,7 @@ AFAStatePtr AFAut::Complement(AFAStatePtr falseacc){
 	std::map<AFAStatePtr,bool> mapseenset;
   //falseacc->mIsAccepted=false;
 	z3::expr falsexp = mInit->mAMap.ctx().bool_val(false);
-	AFAStatePtr newerrorstate=new AFAState(ORLit,falsexp);
+	AFAStatePtr newerrorstate=new AFAState(ORLit,falsexp,*mProgram);
 	newerrorstate->mHMap=new z3::expr(falsexp);
 	newerrorstate->mIsAccepted=true;
 	SetAFAStatesPtr errorstateset;
@@ -336,6 +341,8 @@ void AFAut::RecComplement(AFAStatePtr state, std::map<AFAStatePtr,bool>& mapseen
 			//INV: Following loop must be entered for every symbol.
 //			std::cout<<"Checking for edge on "<<sym<<" from "<<state<<std::endl;
 #ifdef	DBGPRNT
+			//Not every state is supposed to have a transition on every symbol.. because it depends upon
+			//whether that transition has appeared in the input trace yet or not.
 			if(state->mTransitions.find(sym)==state->mTransitions.end())
 				std::cout<<"No transition from "<<state<<" on symbol "<<sym<<std::endl;
 			BOOST_ASSERT_MSG(state->mTransitions.find(sym)!=state->mTransitions.end(),"Some serious error as this state must have transition on every symbol");
@@ -382,6 +389,61 @@ void AFAut::RecComplement(AFAStatePtr state, std::map<AFAStatePtr,bool>& mapseen
 		}
 	}
 }
+
+/*
+ * Copy the input AFA to another one by replicating states and return the new AFA..
+ */
+
+AFAut* AFAut::CloneAFA(std::set<AFAStatePtr>& newset, std::map<AFAStatePtr,AFAStatePtr>& newoldmap){
+
+	AFAut* n = new AFAut();
+	//start with init state..clone it and put the copy old-new in map
+	//a worklist to contain what need to be processed yet..
+	std::set<AFAStatePtr> workset;
+	std::map<AFAStatePtr,AFAStatePtr> oldnewmap;
+	workset.insert(mInit);
+	AFAStatePtr cp = mInit->Clone();
+	n->mInit = cp;
+	if(cp->mType==ORLit)
+		newset.insert(cp);
+	newoldmap.insert(std::make_pair(cp,mInit));
+	oldnewmap.insert(std::make_pair(mInit,cp));
+	while(!workset.empty())
+	{
+		AFAStatePtr picked = *(workset.begin());
+		//get mapped one..
+		workset.erase(picked);
+		AFAStatePtr pickedmapped = oldnewmap.find(picked)->second;
+		//for each transition in picked.. add transition in pickedmapped with mapped AFAStates
+		for(auto const& trans: picked->mTransitions)
+		{
+			SetAFAStatesPtr setst;
+			for(auto const& t: trans.second)
+			{
+				//get mapped one from oldnewmap.. if not found then create anew .. add to workset and oldnewmap
+				//and then add to transition..
+				AFAStatePtr c;
+				if(oldnewmap.find(t)==oldnewmap.end()){
+					c = t->Clone();
+					if(c->mType==ORLit)
+						newset.insert(c);
+					workset.insert(t);
+					oldnewmap.insert(std::make_pair(t,c));
+					newoldmap.insert(std::make_pair(c,t));
+				}else{
+					c=oldnewmap.find(t)->second;
+				}
+				setst.insert(c);
+			}
+			pickedmapped->mTransitions.insert(std::make_pair(trans.first,setst));
+		}
+	}
+//std::cout<<"New set size is "<<newset.size()<<std::endl;
+	return n;
+
+}
+
+
 
 /**
 * Returns this union second-- Not used anymore
@@ -661,6 +723,20 @@ struct GenAFAComparator{
 	}
 };
 
+struct customcomp{
+	bool operator() (const std::pair<std::set<AFAStatePtr>,std::string>& one, const std::pair<std::set<AFAStatePtr>,std::string>& two) const
+	{
+		bool res = std::includes(one.first.begin(), one.first.end(), two.first.begin(), two.first.end());
+		if(one.second==two.second)
+			if(one.first.size()<two.first.size() && !res)
+				return true;
+			else
+				return false;
+		return one<two;
+	}
+};
+
+
 void AFAut::Intersection(faudes::Generator& rGen, faudes::Generator& rRes, std::map<faudes::Idx,faudes::Idx>& oldNewInitStatesMap)
 {
 
@@ -668,9 +744,16 @@ void AFAut::Intersection(faudes::Generator& rGen, faudes::Generator& rRes, std::
 	std::set<GenAFATuple, GenAFAComparator> workset;
 
 	//Insert events in rRes..
+	//std::cout<<"Inserting "<<mProgram->mAllSyms.size()<<" entries in resgen"<<std::endl;
 	BOOST_FOREACH(auto sym, mProgram->mAllSyms)
+	{
+//		std::cout<<"Inserting event "<<sym<<" in intersected gen"<<std::endl;
 		rRes.InsEvent(sym);
+	}
+	//std::cout<<"Ins over"<<std::endl;
 	//get initial states of afa and mix with init states of Gen to create new tuples..
+//	PrintToDot("final.dot");
+//	std::cout<<"printing done"<<std::endl;
 	if(mInit->mType==ORLit){
 		 for(faudes::StateSet::Iterator lit = rGen.InitStatesBegin(); lit != rGen.InitStatesEnd(); ++lit)
 			  {
@@ -687,8 +770,8 @@ void AFAut::Intersection(faudes::Generator& rGen, faudes::Generator& rRes, std::
 	}else{
 	  for(faudes::StateSet::Iterator lit = rGen.InitStatesBegin(); lit != rGen.InitStatesEnd(); ++lit)
 	  {
-		  faudes::Idx state=*lit;
-		  BOOST_FOREACH(auto trans, mInit->mTransitions){
+		    faudes::Idx state=*lit;
+		    BOOST_FOREACH(auto trans, mInit->mTransitions){
 		  	BOOST_ASSERT_MSG(trans.first=="0","Some serious error");
 		  	std::set<AFAStatePtr> setnxt(trans.second.begin(),trans.second.end());
 		  	GenAFATuple entry = std::make_tuple(state,setnxt);
@@ -717,8 +800,15 @@ void AFAut::Intersection(faudes::Generator& rGen, faudes::Generator& rRes, std::
 				allacc=false; break;
 			}
 		}
+		/*if(rGen.MarkedStates().Find(gensrc)!=rGen.MarkedStatesEnd())
+			std::cout<<"gen has marked state"<<std::endl;
+		if(allacc)
+			std::cout<<"One tuple has all as marked"<<std::endl;*/
 		if(allacc && rGen.MarkedStates().Find(gensrc)!=rGen.MarkedStatesEnd())
+		{
+//			std::cout<<"Found one marked state"<<std::endl;
 			rRes.SetMarkedState(mappedthistuple);
+		}
 
 
 		//find transitions out of genstate.. and iterate over them..
@@ -727,7 +817,7 @@ void AFAut::Intersection(faudes::Generator& rGen, faudes::Generator& rRes, std::
 			std::string sym(rGen.EventName(lit->Ev));
 			faudes::Idx gendest = lit->X2;
 			//return the set of transitions from afastates on sym
-			std::set<std::set<AFAStatePtr>> res = GetConjunctedTransitions(afastates,sym);
+			std::set<std::set<AFAStatePtr>> res=GetConjunctedTransitions(afastates,sym);
 			BOOST_FOREACH(auto trans, res)
 			{
 				//preapare a new tuple with gendest and trans..
@@ -753,7 +843,11 @@ void AFAut::Intersection(faudes::Generator& rGen, faudes::Generator& rRes, std::
 	this->PrintToDot("subtracted.dot");
 	std::cout<<"After Intersection before coacc: States = "<<rRes.States().Size()<<" trans = "<<rRes.TransRel().Size()<<std::endl;
 #endif
+	//std::cout<<"done intersection"<<std::endl;
+	//std::cout<<"After Intersection: States = "<<rRes.States().Size()<<" trans = "<<rRes.TransRel().Size()<<std::endl;
 	rRes.Coaccessible();//make it coaccessible..
+	//std::cout<<"done coaccessible"<<std::endl;
+	std::cout<<"After Intersection: States = "<<rRes.States().Size()<<" trans = "<<rRes.TransRel().Size()<<std::endl;
 #ifdef DBGPRNT
 	std::cout<<"After Intersection after coacc: States = "<<rRes.States().Size()<<" trans = "<<rRes.TransRel().Size()<<std::endl;
 	rRes.DotWrite("After Intersection.dot");
@@ -761,6 +855,7 @@ void AFAut::Intersection(faudes::Generator& rGen, faudes::Generator& rRes, std::
 }
 
 
+/*
 struct fa* AFAut::ConvertToNFA(){
 	struct fa* nfa = fa_make_empty();
 	std::map<SetAFAStatesPtr, struct autstate*> seenmap;
@@ -870,6 +965,7 @@ struct fa* AFAut::ConvertToNFA(){
 
 
 }
+*/
 
 bool AFAut::IsUnsafe(){
 	z3::expr wp(*(mInit->mHMap));
@@ -887,12 +983,15 @@ bool AFAut::IsUnsafe(){
  * first want to come up with the set of value flow relations (essential) which contributed to
  * deriving true as the weakest precondition.
  */
-RFRelPairs AFAut::GetRFRelationFromProof(AFAStatePtr st)
+RFRelPairs AFAut::GetRFRelationFromProof(AFAStatePtr st, TSOTransSystem& tsotranssystem, std::string& trace, std::map<AFAStatePtr,RFRelPairs>& memoized)
 {
 	VarDefInfo vdinfo;
-	VarUseDefRel vusedefrel;
+	VarUseDefRel vusedefrelrfe;
+	VarUseDefRel vusedefrelrfi;
 	if(st->mIsAccepted)
-		return std::make_pair(vdinfo,vusedefrel);//if it is an accepting stte return the empty set
+		return std::make_tuple(vdinfo,vusedefrelrfe,vusedefrelrfi);//if it is an accepting stte return the empty set
+	else if(memoized.find(st)!=memoized.end())
+		return memoized[st];
 	else
 	{
 		//For each successor state of st along some edge say e.. call this function recursively
@@ -903,28 +1002,54 @@ RFRelPairs AFAut::GetRFRelationFromProof(AFAStatePtr st)
 		for(const auto& elem: st->mTransitions)
 		{
 			std::string sym=elem.first;
+			if(elem.second.size()!=1)
+				BOOST_ASSERT_MSG(sym.compare("0")==0, " Some invariant eror, by this time only 0 linked transition can have more than one outgoing edges");
 			for(const AFAStatePtr& s: elem.second)
 			{
-				RFRelPairs retv=GetRFRelationFromProof(s);
+				RFRelPairs retv=GetRFRelationFromProof(s,tsotranssystem,trace,memoized);
 				//After getting rf relation..copy it to result.. make sure no conflict
 				//Here conflict means that different values (either vdinfo or relation) appear along
 				//different branches going out from this state which should not be true.
-				VarDefInfo retvdinfo=retv.first;
-				VarUseDefRel retvusedefrel=retv.second;
+				VarDefInfo retvdinfo=std::get<0>(retv);
+				VarUseDefRel retvusedefrelrfe=std::get<1>(retv);
+				VarUseDefRel retvusedefrelrfi=std::get<2>(retv);
+
 				for(const auto& e: retvdinfo)
 				{
+
 					if(vdinfo.find(e.first)!=vdinfo.end())
-						BOOST_ASSERT_MSG(vdinfo[e.first]==e.second," Some serious error look carefully");
+					{
+						//assign the one that is latest..between e.second and vdinfo[e.first]
+						if(e.second.find(vdinfo[e.first])!=-1)
+						{
+							//e.second contains vdinfo[e.first] hence use longer one..(NO smaller one, one near end..)
+							//vdinfo[e.first]=e.second;
+						}else if(vdinfo[e.first].find(e.second)!=-1)
+						{
+							vdinfo[e.first]=e.second;
+						}else
+							BOOST_ASSERT_MSG(false, "SOme error, it should not be the case");
+
+					}
 					else
+
 						vdinfo[e.first]=e.second;
 				}
-				for(const auto& e: retvusedefrel)
+				for(const auto& e: retvusedefrelrfe)
 				{
-					if(vusedefrel.find(e.first)!=vusedefrel.end())
-						BOOST_ASSERT_MSG(vusedefrel[e.first]==e.second," Some serious error look carefully");
+					if(vusedefrelrfe.find(e.first)!=vusedefrelrfe.end())
+						BOOST_ASSERT_MSG(vusedefrelrfe[e.first]==e.second," Some serious error look carefully");
 					else
-						vusedefrel[e.first]=e.second;
+						vusedefrelrfe[e.first]=e.second;
 				}
+				for(const auto& e: retvusedefrelrfi)
+				{
+					if(vusedefrelrfi.find(e.first)!=vusedefrelrfi.end())
+						BOOST_ASSERT_MSG(vusedefrelrfi[e.first]==e.second," Some serious error look carefully");
+					else
+						vusedefrelrfi[e.first]=e.second;
+				}
+
 //				std::cout<<"After copy of return size is "<<vdinfo.size()<< " and "<<vusedefrel.size()<<std::endl;
 				////////////////Consistency check over..
 				//get the symbol (prefix closed) based on st->mRWord and the edge
@@ -933,7 +1058,9 @@ RFRelPairs AFAut::GetRFRelationFromProof(AFAStatePtr st)
 				{
 //					std::cout<<"Sym is "<<sym<<std::endl;
 					//then it must be a read or write symbol..in mRWLRMap..
-					BOOST_ASSERT_MSG(mProgram->mRWLHRHMap.find(sym)!=mProgram->mRWLHRHMap.end(),"Some serious invariant error, look crefully");
+					//BOOST_ASSERT_MSG(mProgram->mRWLHRHMap.find(sym)!=mProgram->mRWLHRHMap.end(),"Some serious invariant error, look crefully");
+					//Above invariant no longer holds if sym is of lcas type as well
+					//I am modifying GetDefVar and GetUseVars function below in case sym is lcas..
 					//get def var of sym
 					std::string def=mProgram->GetDefVar(sym);
 					//get use vars of sym
@@ -966,10 +1093,18 @@ RFRelPairs AFAut::GetRFRelationFromProof(AFAStatePtr st)
 					   if(mProgram->mGlobalVars.find(def)!=mProgram->mGlobalVars.end())
 					   {
 //						   std::cout<<def<<" ia a global var"<<std::endl;
-						   if(vdinfo.find(def)!=vdinfo.end())
-							   BOOST_ASSERT_MSG(vdinfo.find(def)->second==thissym," Some serious error.. this def is already set to differnt symbol.. not possible");
-						   else
-							   vdinfo[def]=thissym;
+						   std::string chopandrevthissym=ChopAndReverse(trace,thissym);
+						   //INTERSTING Finding: no need to check here if it already exists and is sam
+						   //because it is possible that it already exists from past but this sym
+						   //is going to redefine that var again.. so checking fo rconcsistency will
+						   //only be needed in starting as we are doing in the start of the loop.
+	//					   if(vdinfo.find(def)!=vdinfo.end()){
+//							   BOOST_ASSERT_MSG(vdinfo.find(def)->second==chopandrevthissym," Some serious error.. this def is already set to differnt symbol.. not possible");
+		//				   }
+			//			   else{
+							   vdinfo[def]=chopandrevthissym;
+				//		   }
+
 					   }
 					   //else
 //						   std::cout<<def<<" is not a global var"<<std::endl;
@@ -980,7 +1115,7 @@ RFRelPairs AFAut::GetRFRelationFromProof(AFAStatePtr st)
 				   //if sym is a read symbol such that its rhs is a global variable then find
 				   //the last write done to this global variable and let that sym be defsym
 				   //add defsym-thissym in vusedefrel relation (while checking the conflict as well)
-				   if(mProgram->mSymType[sym]=="read")
+				   else if(mProgram->mSymType[sym]=="read")
 				   {
 //					   std::cout<<sym<<" is a read"<<std::endl;
 					   if(uses.size()==1)
@@ -992,17 +1127,98 @@ RFRelPairs AFAut::GetRFRelationFromProof(AFAStatePtr st)
 //							   std::cout<<useg<<" ia a global var"<<std::endl;
 							   //get last mod symbol that defines this global variable..
 							   //this must be defined..
-							   BOOST_ASSERT_MSG(vdinfo.find(useg)!=vdinfo.end()," Some serious issue by now this def must be there ");
+//							   BOOST_ASSERT_MSG(vdinfo.find(useg)!=vdinfo.end()," Some serious issue by now this def must be there ");
 							   std::string lastmod=vdinfo[useg];
-							   if(vusedefrel.find(thissym)!=vusedefrel.end())
-								   BOOST_ASSERT_MSG(vusedefrel[thissym]==lastmod," Some serious issue in conflicting information ");
-							   else
-								   vusedefrel[thissym]=lastmod;
+							   std::string chopandrevthissysm=ChopAndReverse(trace,thissym);
+							   //std::string chopandrevlastmode=ChopAndReverse(trace,lastmod);
+							   //IMP: no need to reverse and chop what was in vdinfo as it must have been already so
+							   if(vusedefrelrfe.find(chopandrevthissysm)!=vusedefrelrfe.end())
+								   BOOST_ASSERT_MSG(vusedefrelrfe[chopandrevthissysm]==lastmod," Some serious issue in conflicting information ");
+							   else{
+								   vusedefrelrfe[chopandrevthissysm]=lastmod;
+							   }
 						   }/*else
-							   std::cout<<useg<<" is not global var"<<std::endl;*/
+							   std::cout<<useg<<" is not global var"<<std::endl;means of the form l(index)=l, not interesting*/
 					   }/*else
 						   std::cout<<"use size  is not 1"<<std::endl;*/
-				   }
+					   if(tsotranssystem.mLocalRFMap.find(sym)!=tsotranssystem.mLocalRFMap.end())
+					   {
+#ifdef DBG
+							std::cout<<"----------_Symbol "<<sym<<" is a local read"<<std::endl;
+#endif
+
+						   //BOOST_ASSERT_MSG(false," Intersting.. it means a rfi contributed to making it error.. first analyze this example and then we can safely comment it as I think this case has been handled carefulll");
+						   //means it is a local rf information, encode this rfi information
+						   std::string locwritesym = tsotranssystem.mLocalRFMap[sym];
+						   //remove thissysm suffix from trace
+						   //find last occurrence of locwritesym before thissym in trace
+						   /*
+						    * int aa=ss.rfind("5.6.8.5.7.3133.9");
+								int bb =ss.rfind("3133",aa);
+								std::cout<<ss.substr(0,bb+1);
+						    *
+						    */
+						   int a=trace.rfind(thissym);
+						   int b=trace.rfind(locwritesym,a);
+#ifdef DBG
+						   std::cout<<sym<<" is alocal read sym read from "<<locwritesym<<std::endl;
+#endif
+						   //BOOST_ASSERT_MSG(b!=-1," Some error ");
+						   /*
+						    * Found intersting scenario when local read happende but the element in the
+						    * buffer was not flused in the trace hence it does not appear..Whereas
+						    * we were asserting that locwritesym must appear as part of the trace
+						    * hence now we change this assert.. in fact we will encode this rfi only
+						    * if the corresponding write was also present..
+						    * BOOST_ASSERT_MSG(b!=-1," Some error "); commented
+						    * IMP thing is-- will this rf have any impact in finding fences..??
+						    */
+						   if(b!=-1){
+							   std::string locwrite=trace.substr(0,b+1);
+#ifdef DBG
+							   std::cout<<"Read from "<<locwrite<<std::endl;
+#endif
+							   std::string chopandrevthissym=ChopAndReverse(trace,thissym);
+							   std::reverse(locwrite.begin(),locwrite.end());
+							   //add to rf
+							   if(vusedefrelrfi.find(chopandrevthissym)!=vusedefrelrfi.end())
+								   BOOST_ASSERT_MSG(vusedefrelrfi[chopandrevthissym]==locwrite," Some serious error look carefully");
+							   else
+								   vusedefrelrfi[chopandrevthissym]=locwrite;
+						   }
+					   }else{
+#ifdef DBG
+						   std::cout<<"----------_Symbol "<<sym<<" is a not a local read"<<std::endl;
+#endif
+					   }
+				   }else if(mProgram->mSymType[sym]=="lcas")//if lcas symboll
+				   {
+					   //get the var that is being used.. first argument from casrwmap of program object
+					   //find last def of this variable..
+					   //construct rf from def and this use..
+					   std::string useg=*(uses.begin());
+					   std::string lastmod=vdinfo[useg];
+					   std::string chopandrevthissysm=ChopAndReverse(trace,thissym);
+					   //std::string chopandrevlastmode=ChopAndReverse(trace,lastmod);
+					  	//IMP: no need to reverse and chop what was in vdinfo as it must have been already so
+					  	if(vusedefrelrfe.find(chopandrevthissysm)!=vusedefrelrfe.end())
+					  		BOOST_ASSERT_MSG(vusedefrelrfe[chopandrevthissysm]==lastmod," Some serious issue in conflicting information ");
+					  	else{
+					  		vusedefrelrfe[chopandrevthissysm]=lastmod;
+					  	}
+					  	//after putting in rf put in def part as well..
+					  	//INTERSTING Finding: no need to check here if it already exists and is sam
+					  	//because it is possible that it already exists from past but this sym
+					  	//is going to redefine that var again.. so checking fo rconcsistency will
+					  	//only be needed in starting as we are doing in the start of the loop.
+					  	//if(vdinfo.find(def)!=vdinfo.end()){
+					  	//BOOST_ASSERT_MSG(vdinfo.find(def)->second==chopandrevthissym," Some serious error.. this def is already set to differnt symbol.. not possible");
+					  	//				   }
+					  	//			   else{
+					  	//put this symbol as def of variable also.. as lcas is both read and write operation
+					  	vdinfo[useg]=chopandrevthissysm;
+				   }else
+					   BOOST_ASSERT_MSG(false," No valid symbol found, serious error look carefully");
 				   /*else
 					   std::cout<<sym<<" is not a read"<<std::endl;*/
 				}
@@ -1011,13 +1227,47 @@ RFRelPairs AFAut::GetRFRelationFromProof(AFAStatePtr st)
 		}
 		//return this rf relation constructed so far.
 //		std::cout<<" return map size is "<<vdinfo.size()<<", and "<<vusedefrel.size()<<std::endl;
-		return std::make_pair(vdinfo,vusedefrel);
+		memoized[st]=std::make_tuple(vdinfo,vusedefrelrfe,vusedefrelrfi);
+		return std::make_tuple(vdinfo,vusedefrelrfe,vusedefrelrfi);
 	}
 
 
 }
 
+std::string AFAut::ChopAndReverse(std::string& orig, std::string& mrword)
+{
 
+	//dont do rfind till mrword because we want to retain the first occurrence of the mrword..
+	//so extract first one from mrword
+	boost::char_separator<char> sep(".");
+	std::string tmpmrword=mrword;
+	boost::tokenizer<boost::char_separator<char>> tokens1(mrword, sep);
+	for(const std::string& sym: tokens1){
+		tmpmrword.erase(0,sym.length()+1);
+		break;
+	}
+
+//A speical case happens when orig is 2.3.4 and mrword is 4
+	//then we would like to keep thing as it is..i.e. 4.3.2, therefore we increase aa by 1 because in this case . does not appear after what is left
+	int aa = orig.rfind(tmpmrword);
+	if(tmpmrword.length()==0)
+		aa=aa+1;
+	std::string tmporig=orig.substr(0,aa-1);
+	std::string rev="";
+	boost::tokenizer<boost::char_separator<char>> tokens(tmporig, sep);
+
+		//reverse and remove intial value writes from the trace.
+		for (const std::string& sym: tokens)
+		{
+			if(rev.length()==0)
+				rev=sym;
+			else
+				rev=sym+"."+rev;
+
+		}
+	//std::cout<<"Choprev of "<<orig<<", and "<<mrword<<" is "<<rev<<std::endl;
+return rev;
+}
 
 
 

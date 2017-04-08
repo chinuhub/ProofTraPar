@@ -13,10 +13,10 @@
 #include<map>
 #include<tuple>
 #include<c++/z3++.h>
-extern "C"
-{
-#include <fa.h>
-}
+#include "../Parser/Program.h"
+#include"../TSOTransSystem/TSOTransSystem.h"
+struct z3comparator;
+
 
 #include <libfaudes.h>
 //Define a class that has the data you want to associate to every vertex and
@@ -37,9 +37,6 @@ extern "C"
   	bool operator() (const AFAStatePtr& one, const AFAStatePtr& two) const;
   };
 
-  struct mapexpcomparator{
-  	bool operator() (const z3::expr& one, const z3::expr& two) const;
-  };
 
   typedef std::set<AFAStatePtr,mapstatecomparator> SetAFAStatesPtr;
 
@@ -59,14 +56,25 @@ extern "C"
   	bool operator() (const AFAStatePtr& one, const AFAStatePtr& two) const;
   };
 
-  typedef std::map<struct autstate*, std::tuple<std::string,std::string,std::map<std::string,std::set<struct autstate*>>>> autstateinfotype;
+  struct myhash
+  {
+
+      long operator()(const AFAStatePtr& x) const;
+  };
+
+
+  struct comparatoreqclass{
+  	bool operator() (const AFAStatePtr& one, const AFAStatePtr& two) const;
+  };
+ //typedef std::map<struct autstate*, std::tuple<std::string,std::string,std::map<std::string,std::set<struct autstate*>>>> autstateinfotype;
 enum StateType {AND,OR,ORLit};
 class AFAState {
 
 
 public:
-	std::map<z3::expr, bool,mapexpcomparator> mUnsatMemoization;
-	std::string mAssumeSym;
+	Program& mProgram;
+	static std::map<z3::expr, bool,z3comparator> mUnsatMemoization;
+
 	StateType mType;
 	//set of transitions going out of this state..
 	std::multimap<std::string,SetAFAStatesPtr> mTransitions;
@@ -81,43 +89,37 @@ public:
 	//adn we cant use normal var becaus then it is like o argument constructor which odes not exist for z3::expr
 	//and hence give error.. Hence w have to live with * declaration., or rathe rmake it shared_ptr;;
 	z3::expr* mHMap;
-	AFAState(StateType type, std::string& wrd, z3::expr& phi):mRWord(wrd), mAMap(phi)
-	{mType=type; mIsAccepted=false;mHMap=NULL; mAssumeSym="";
+	AFAState(StateType type, std::string& wrd, z3::expr& phi, Program& mp):mRWord(wrd), mAMap(phi), mProgram(mp)
+	{mType=type; mIsAccepted=false;mHMap=NULL;;
 	}
-	AFAState(StateType type, z3::expr& phi): mAMap(phi)
+	AFAState(StateType type, z3::expr& phi, Program& mp): mAMap(phi), mProgram(mp)
 	{
 		mType=type;mIsAccepted=false,mHMap=new z3::expr(phi);
 		std::stringstream st;
 		st<<this;
 		mRWord=st.str();
-		mAssumeSym="";
+
 	}
 	void PassOne(std::map<AFAStatePtr,AFAStatePtr,mapstatecomparator>& mAllStates);
 	bool PassTwo(std::map<AFAStatePtr,AFAStatePtr,mapstatecomparator>& mAllStates);
-
+	AFAState* Clone();
 	//Pass to Print DOT file
 	void PassThree(Graph& g, std::map<AFAStatePtr, vertex_t,mapstatecomparator>& indmap);
 
 	std::set<std::tuple<std::string,AFAStatePtr>>  PassFourPhaseOne(std::set<AFAStatePtr>& ANDORStates, std::set<AFAStatePtr>& ORLitStates,std::set<std::tuple<AFAStatePtr,std::string,AFAStatePtr>, tuplecomparator>& toANDLink,std::map<AFAStatePtr,std::set<std::tuple<std::string,AFAStatePtr>>>& );
 	std::set<std::set<AFAStatePtr>> PassFourPhaseZero(std::map<AFAStatePtr,std::set<std::set<AFAStatePtr>>>&);
 
-	//struct fa* PassFour(AFAStatePtr init, std::map<AFAStatePtr,AFAStatePtr,mapstatecomparator>& allStates );
 
-		//std::string getOredString(std::string& in);
-	struct fa* createRepeat(std::string &in);
-	struct fa* createOr(std::string &in);
 //BEWARE: having mapstatecomparator might be problematic if states do not have rword/amap in them like those created manually.
 	//bool HelperAddEdgeIfAbsent(AFAStatePtr src,AFAStatePtr dest,std::string sym,Graph& g,std::map<AFAStatePtr, vertex_t,mapstatecomparator>mapindex);
 	bool HelperAddEdgeIfAbsent(AFAStatePtr src,AFAStatePtr dest,std::string sym);
 	AFAStatePtr HelperAddStateIfAbsent(z3::expr& phi,std::string& mRWord,bool& isPresent, std::map<AFAStatePtr,AFAStatePtr,mapstatecomparator>& mAllStates);
-	static std::set<z3::expr,mapexpcomparator> HelperGetFreeVars(z3::expr& phi);
-	static std::set<std::string> HelperGetFreeVarsStr(z3::expr& phi);
 	z3::expr HelperSimplifyExpr(z3::expr exp);
 	bool HelperIsUnsat(z3::expr formula);
 	bool HelperIsValid(z3::expr formula);
 
 	std::set<std::string> getTransitionKeys();
-
+	bool IsLogicalEq(z3::expr& one, z3::expr& two);
 	virtual ~AFAState();
 };
 

@@ -90,8 +90,41 @@ std::set<std::set<AFAStatePtr>> AFAState::PassFourPhaseZero(std::map<AFAStatePtr
 
 //following comparator function is used when both AMAP and HMap must match to make two states into same equivalence
 //class.
+//IMP POINT TO REMEMBER: wheenver you make a custom data structure where hash and equality operator both are required
+//make sure to follow the rule that if a equal b then both should give same hash value as well..
+//but certainly.. if a and b's hash value are same doesnt mean that both are equal.. but first condition is necessary
+//otherwise they will never be checed for equality operator if their hash values differ
+
+    long myhash::operator()(const AFAStatePtr& x) const
+    {
+    	//return x->mAMap.hash()+x->mHMap->hash();
+    	return 10;
+    }
 
 
+
+bool comparatoreqclass::operator() (const AFAStatePtr& one, const AFAStatePtr& two) const{
+	//if both are equal (logically) then return false else continue next..
+	//BOOST_ASSERT_MSG(one->mAMap.hash()==two->mAMap.hash()," Check");
+	//BOOST_ASSERT_MSG(one->mAMap.hash()==two->mAMap.hash()," Check");
+		bool res1=one->IsLogicalEq(one->mAMap,two->mAMap);
+		bool res2=one->IsLogicalEq(*(one->mHMap),*(two->mHMap));
+		if(res1 && res2)//means both are equal then return false..
+		{
+/*
+			if(one->mAMap.hash()!=two->mAMap.hash()){
+			std::cout<<one->mAMap<<" and "<<two->mAMap<<" are equivalent"<<std::endl;
+			std::cout<<(*(one->mHMap))<<" and "<<*(two->mHMap)<<" are equivalent"<<std::endl;
+			}
+*/
+			return true;
+		}
+		else{
+		//	std::cout<<"Is "<<one->mAMap<<" logical equivalent to "<<two->mAMap<<" res: "<<res1<<std::endl;
+			return false;
+		}
+
+}
 //struct mymapstatecomparator{
 bool mymapstatecomparator::operator() (const AFAStatePtr& one, const AFAStatePtr& two) const{
 		if(one->mAMap.hash()==two->mAMap.hash())
@@ -213,6 +246,7 @@ std::set<std::tuple<std::string,AFAStatePtr>>  AFAState::PassFourPhaseOne(std::s
 }
 
 
+/*
 struct fa* AFAState::createRepeat(std::string &in){
 	struct fa* aut = fa_make_empty();
 
@@ -242,3 +276,4 @@ struct fa* AFAState::createOr(std::string &in){
 	return aut;
 }
 
+*/

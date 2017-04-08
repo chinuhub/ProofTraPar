@@ -20,11 +20,12 @@
 #include <c++/z3++.h>
 #include "QiParser.h"
 class Process {
+	int mTid;
 	Program& mProgram;
 	z3::context& mCtx;
 	client::Parser& mParser;
 public:
-	Process(Program& P, z3::context& c, client::Parser& par);
+	Process(Program& P, z3::context& c, client::Parser& par, int);
 
 	void ParseInput(std::ifstream& );
 	virtual ~Process();

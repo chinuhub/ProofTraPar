@@ -76,10 +76,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-build_triplet = @build@
-host_triplet = @host@
-target_triplet = @target@
-bin_PROGRAMS = a.out$(EXEEXT)
+bin_PROGRAMS = ProofTraPar$(EXEEXT)
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/depcomp
@@ -93,14 +90,17 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am__dirstamp = $(am__leading_dot)dirstamp
-am_a_out_OBJECTS = Test.$(OBJEXT) Parser/Program.$(OBJEXT) \
-	Parser/Process.$(OBJEXT) SCTransSystem/SCTransSystem.$(OBJEXT) \
-	AFA/AFAut.$(OBJEXT) Parser/QiParser.$(OBJEXT) \
-	AFA/AFAState.$(OBJEXT) AFA/PassTwo.$(OBJEXT) \
-	AFA/PassThree.$(OBJEXT) AFA/PassFourWeak.$(OBJEXT) \
-	AFA/PassFourAFA.$(OBJEXT)
-a_out_OBJECTS = $(am_a_out_OBJECTS)
-a_out_LDADD = $(LDADD)
+am_ProofTraPar_OBJECTS = ProofTraPar.$(OBJEXT) \
+	Parser/Program.$(OBJEXT) Parser/Process.$(OBJEXT) \
+	SCTransSystem/SCTransSystem.$(OBJEXT) AFA/AFAut.$(OBJEXT) \
+	Parser/QiParser.$(OBJEXT) AFA/AFAState.$(OBJEXT) \
+	AFA/PassTwo.$(OBJEXT) AFA/PassThree.$(OBJEXT) \
+	AFA/PassFourWeak.$(OBJEXT) AFA/PassFourAFA.$(OBJEXT) \
+	TSOTransSystem/TSOState.$(OBJEXT) \
+	TSOTransSystem/TSOTransSystem.$(OBJEXT) \
+	FenceFinder/FenceFinder.$(OBJEXT) RMMInterface.$(OBJEXT)
+ProofTraPar_OBJECTS = $(am_ProofTraPar_OBJECTS)
+ProofTraPar_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -130,8 +130,8 @@ AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
 am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
-SOURCES = $(a_out_SOURCES)
-DIST_SOURCES = $(a_out_SOURCES)
+SOURCES = $(ProofTraPar_SOURCES)
+DIST_SOURCES = $(ProofTraPar_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -158,12 +158,17 @@ ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
+ALLOCA = @ALLOCA@
 AMTAR = @AMTAR@
 AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
+CC = @CC@
+CCDEPMODE = @CCDEPMODE@
+CFLAGS = @CFLAGS@
+CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CXX = @CXX@
 CXXDEPMODE = @CXXDEPMODE@
@@ -174,7 +179,9 @@ DEPDIR = @DEPDIR@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
+EGREP = @EGREP@
 EXEEXT = @EXEEXT@
+GREP = @GREP@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -184,7 +191,7 @@ LDFLAGS = @LDFLAGS@
 LIBOBJS = @LIBOBJS@
 #-DDBGPRNT   
 #LIBS = -lboost_regex -lfa -lboost_chrono -lboost_system -lz3
-LIBS = -lz3 -Bstatic -l:libboost_regex.a -l:libfa.a -l:libboost_chrono.a -l:libboost_system.a -l:libfaudes.a -lpthread
+LIBS = -lz3 -Bstatic -l:libboost_regex.a -l:libboost_chrono.a -l:libboost_system.a -l:libboost_graph.a -l:libfaudes.a -lpthread
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
 MKDIR_P = @MKDIR_P@
@@ -197,6 +204,7 @@ PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
+POW_LIB = @POW_LIB@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
@@ -205,6 +213,7 @@ abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
+ac_ct_CC = @ac_ct_CC@
 ac_ct_CXX = @ac_ct_CXX@
 am__include = @am__include@
 am__leading_dot = @am__leading_dot@
@@ -212,22 +221,14 @@ am__quote = @am__quote@
 am__tar = @am__tar@
 am__untar = @am__untar@
 bindir = @bindir@
-build = @build@
 build_alias = @build_alias@
-build_cpu = @build_cpu@
-build_os = @build_os@
-build_vendor = @build_vendor@
 builddir = @builddir@
 datadir = @datadir@
 datarootdir = @datarootdir@
 docdir = @docdir@
 dvidir = @dvidir@
 exec_prefix = @exec_prefix@
-host = @host@
 host_alias = @host_alias@
-host_cpu = @host_cpu@
-host_os = @host_os@
-host_vendor = @host_vendor@
 htmldir = @htmldir@
 includedir = @includedir@
 infodir = @infodir@
@@ -247,19 +248,15 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 srcdir = @srcdir@
 sysconfdir = @sysconfdir@
-target = @target@
 target_alias = @target_alias@
-target_cpu = @target_cpu@
-target_os = @target_os@
-target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-a_out_SOURCES = Test.cpp Parser/Program.cpp Parser/Process.cpp SCTransSystem/SCTransSystem.cpp AFA/AFAut.cpp Parser/QiParser.cpp AFA/AFAState.cpp AFA/PassTwo.cpp AFA/PassThree.cpp AFA/PassFourWeak.cpp AFA/PassFourAFA.cpp 
+ProofTraPar_SOURCES = ProofTraPar.cpp Parser/Program.cpp Parser/Process.cpp SCTransSystem/SCTransSystem.cpp AFA/AFAut.cpp Parser/QiParser.cpp AFA/AFAState.cpp AFA/PassTwo.cpp AFA/PassThree.cpp AFA/PassFourWeak.cpp AFA/PassFourAFA.cpp TSOTransSystem/TSOState.cpp TSOTransSystem/TSOTransSystem.cpp FenceFinder/FenceFinder.cpp RMMInterface.cpp
 AUTOMAKE_OPTIONS = subdir-objects
-AM_LDFLAGS = -L../boost_1_58_0/stage/lib   -L../augeas-1.4.0/src/.libs -L../z3-master/build -L../libfaudes-2_26g
-AM_CPPFLAGS = -I../boost_1_58_0 -I../augeas-1.4.0/src -I../z3-master/src/api -I../libfaudes-2_26g/include
-AM_CXXFLAGS = -g -std=c++11  
+AM_LDFLAGS = -L../extlib/boost_1_58_0/stage/lib   -L../extlib/z3-master/build -L../extlib/libfaudes-2_26g
+AM_CPPFLAGS = -I../extlib/boost_1_58_0 -I../extlib/z3-master/src/api -I../extlib/libfaudes-2_26g/include
+AM_CXXFLAGS = -std=c++11  
 all: all-am
 
 .SUFFIXES:
@@ -373,31 +370,56 @@ AFA/PassFourWeak.$(OBJEXT): AFA/$(am__dirstamp) \
 	AFA/$(DEPDIR)/$(am__dirstamp)
 AFA/PassFourAFA.$(OBJEXT): AFA/$(am__dirstamp) \
 	AFA/$(DEPDIR)/$(am__dirstamp)
+TSOTransSystem/$(am__dirstamp):
+	@$(MKDIR_P) TSOTransSystem
+	@: > TSOTransSystem/$(am__dirstamp)
+TSOTransSystem/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) TSOTransSystem/$(DEPDIR)
+	@: > TSOTransSystem/$(DEPDIR)/$(am__dirstamp)
+TSOTransSystem/TSOState.$(OBJEXT): TSOTransSystem/$(am__dirstamp) \
+	TSOTransSystem/$(DEPDIR)/$(am__dirstamp)
+TSOTransSystem/TSOTransSystem.$(OBJEXT):  \
+	TSOTransSystem/$(am__dirstamp) \
+	TSOTransSystem/$(DEPDIR)/$(am__dirstamp)
+FenceFinder/$(am__dirstamp):
+	@$(MKDIR_P) FenceFinder
+	@: > FenceFinder/$(am__dirstamp)
+FenceFinder/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) FenceFinder/$(DEPDIR)
+	@: > FenceFinder/$(DEPDIR)/$(am__dirstamp)
+FenceFinder/FenceFinder.$(OBJEXT): FenceFinder/$(am__dirstamp) \
+	FenceFinder/$(DEPDIR)/$(am__dirstamp)
 
-a.out$(EXEEXT): $(a_out_OBJECTS) $(a_out_DEPENDENCIES) $(EXTRA_a_out_DEPENDENCIES) 
-	@rm -f a.out$(EXEEXT)
-	$(AM_V_CXXLD)$(CXXLINK) $(a_out_OBJECTS) $(a_out_LDADD) $(LIBS)
+ProofTraPar$(EXEEXT): $(ProofTraPar_OBJECTS) $(ProofTraPar_DEPENDENCIES) $(EXTRA_ProofTraPar_DEPENDENCIES) 
+	@rm -f ProofTraPar$(EXEEXT)
+	$(AM_V_CXXLD)$(CXXLINK) $(ProofTraPar_OBJECTS) $(ProofTraPar_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
 	-rm -f AFA/*.$(OBJEXT)
+	-rm -f FenceFinder/*.$(OBJEXT)
 	-rm -f Parser/*.$(OBJEXT)
 	-rm -f SCTransSystem/*.$(OBJEXT)
+	-rm -f TSOTransSystem/*.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ProofTraPar.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/RMMInterface.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@AFA/$(DEPDIR)/AFAState.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@AFA/$(DEPDIR)/AFAut.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@AFA/$(DEPDIR)/PassFourAFA.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@AFA/$(DEPDIR)/PassFourWeak.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@AFA/$(DEPDIR)/PassThree.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@AFA/$(DEPDIR)/PassTwo.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@FenceFinder/$(DEPDIR)/FenceFinder.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@Parser/$(DEPDIR)/Process.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@Parser/$(DEPDIR)/Program.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@Parser/$(DEPDIR)/QiParser.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@SCTransSystem/$(DEPDIR)/SCTransSystem.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@TSOTransSystem/$(DEPDIR)/TSOState.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@TSOTransSystem/$(DEPDIR)/TSOTransSystem.Po@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -532,10 +554,14 @@ distclean-generic:
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
 	-rm -f AFA/$(DEPDIR)/$(am__dirstamp)
 	-rm -f AFA/$(am__dirstamp)
+	-rm -f FenceFinder/$(DEPDIR)/$(am__dirstamp)
+	-rm -f FenceFinder/$(am__dirstamp)
 	-rm -f Parser/$(DEPDIR)/$(am__dirstamp)
 	-rm -f Parser/$(am__dirstamp)
 	-rm -f SCTransSystem/$(DEPDIR)/$(am__dirstamp)
 	-rm -f SCTransSystem/$(am__dirstamp)
+	-rm -f TSOTransSystem/$(DEPDIR)/$(am__dirstamp)
+	-rm -f TSOTransSystem/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
@@ -545,7 +571,7 @@ clean: clean-am
 clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
-	-rm -rf ./$(DEPDIR) AFA/$(DEPDIR) Parser/$(DEPDIR) SCTransSystem/$(DEPDIR)
+	-rm -rf ./$(DEPDIR) AFA/$(DEPDIR) FenceFinder/$(DEPDIR) Parser/$(DEPDIR) SCTransSystem/$(DEPDIR) TSOTransSystem/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -591,7 +617,7 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-	-rm -rf ./$(DEPDIR) AFA/$(DEPDIR) Parser/$(DEPDIR) SCTransSystem/$(DEPDIR)
+	-rm -rf ./$(DEPDIR) AFA/$(DEPDIR) FenceFinder/$(DEPDIR) Parser/$(DEPDIR) SCTransSystem/$(DEPDIR) TSOTransSystem/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

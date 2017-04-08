@@ -7,8 +7,9 @@
 
 #include "Process.h"
 
-Process::Process(Program& P, z3::context& ct, client::Parser& par): mProgram(P), mCtx(ct), mParser(par) {
+Process::Process(Program& P, z3::context& ct, client::Parser& par, int tid): mProgram(P), mCtx(ct), mParser(par) {
 	// TODO Auto-generated constructor stub
+	mTid=tid;
 
 }
 
@@ -16,6 +17,8 @@ void Process::ParseInput(std::ifstream& inputfile)
 		{
 			bool state=false;
 			//mProgram.mAllSyms.push_back("0");//no need to push now..
+
+
 			while(inputfile.good())
 			{
 				std::string line;
@@ -27,7 +30,14 @@ void Process::ParseInput(std::ifstream& inputfile)
 #ifdef	DBGPRNT
 					std::cout<<"Regex is "<<fields.back()<<std::endl;
 #endif
-					mProgram.mProcessesregex.push_back(fields.back());
+					//in place of regex, write automata file to read from
+					faudes::Generator* spec= new faudes::Generator();
+					//By this time all symbols needed for this process must been added in
+					//Program's symbol table.. hence pass tid as well
+					mProgram.ReadAutSpec(mProgram.mRootPath+"/"+fields.back(),*spec,mTid);
+					BOOST_ASSERT_MSG(spec->InitStatesEmpty()==false," Some serious issue");
+					mProgram.mProcessesSpec.resize(mTid+1);
+					mProgram.mProcessesSpec[mTid]=spec;//put at tid'th index of vector..
 					break;
 					//extract regex and then break from the loop
 				}else if(symname.compare("AMap")==0){
@@ -47,6 +57,8 @@ void Process::ParseInput(std::ifstream& inputfile)
 
 					//add the symname to the vector so that it could be used later
 					mProgram.mAllSyms.push_back(symname);
+
+					mProgram.mSymTidMap.insert(std::make_pair(symname,mTid));
 
 					std::vector <std::string> inside;
 
@@ -77,9 +89,24 @@ void Process::ParseInput(std::ifstream& inputfile)
 							//results[2] is lhs
 							//results[3] is rhs
 						}
-					}else if(opname.compare("w")==0){
+					}else if(opname.compare("w")==0 || opname.compare("locw")==0){
 						inside.clear();
 						boost::match_results<std::string::const_iterator> results;
+						if(boost::regex_match(fields.front(), results, boost::regex("(locw)[(](.*?)[)][(](.*?)[)]")))
+						{
+#ifdef	DBGPRNT
+							std::cout<<"Found write "<<results[2]<<"="<<results[3]<<std::endl;
+							#endif
+							std::string res2(results[2]);
+							std::string res3(results[3]);
+							z3::expr lhs = mProgram.AddIfNot(res2);
+							z3::expr rhs = client::ParseExp(mParser,res3,mProgram.mVarExprMap,mCtx);
+							std::pair<z3::expr,z3::expr> pr = std::make_pair(lhs,rhs);
+							mProgram.mRWLHRHMap.insert(std::make_pair(symname,pr));
+							mProgram.mSymType.insert(std::make_pair(symname,"write"));
+							//add it as a localwrite
+							mProgram.mLocalWrites.insert(symname);
+						}
 						if(boost::regex_match(fields.front(), results, boost::regex("(w)[(](.*?)[)][(](.*?)[)]")))
 						{
 #ifdef	DBGPRNT
@@ -137,6 +164,7 @@ void Process::ParseInput(std::ifstream& inputfile)
 				}
 
 			}
+
 		}
 
 

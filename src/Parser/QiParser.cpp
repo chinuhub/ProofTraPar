@@ -100,7 +100,7 @@ namespace client
         expr operator()(qi::info::nil_) const {BOOST_ASSERT_MSG(false,"Should not reach here");}
         expr operator()(int n) const {  return mCtx.int_val(n);}
         expr operator()(std::string const& str) const {
-        	BOOST_ASSERT_MSG(mVarExprMap.find(str)!=mVarExprMap.end(),"Unexpected error: No expr found for this variable");
+		        	BOOST_ASSERT_MSG(mVarExprMap.find(str)!=mVarExprMap.end(),"Unexpected error: No expr found for this variable");
         	z3::expr t =mVarExprMap.find(str)->second;
         	return (t);
         }
@@ -231,6 +231,12 @@ namespace client
   	 std::string::const_iterator end = input.end();
   	 expression_ast ast;
   	 eval_z3_exp evaluator(VarExprMap,ctx);
+
+  	 if(input.compare("false")==0)
+  			return ctx.bool_val(false);
+  	 else if(input.compare("true")==0)
+  		 return ctx.bool_val(true);
+
   	 bool r = boost::spirit::qi::phrase_parse(beg, end, parser, space, ast);
   	 if(!r || beg!=end)
   	 {

@@ -4,20 +4,23 @@
 bool operator <(const TSOState& one, const TSOState&  two){
 	if(one.mBuffBound==two.mBuffBound)
 		if(one.mNumThreads==two.mNumThreads)
-			if(one.mBufferMap==two.mBufferMap)
-				if(one.mCStatesMap==two.mCStatesMap)
-					if(one.mLastInstanceMap==two.mLastInstanceMap)
-						return one.mTransSym<two.mTransSym;
+			if(one.mEndingWith == two.mEndingWith)
+				if(one.mBufferMap==two.mBufferMap)
+					if(one.mCStatesMap==two.mCStatesMap)
+						if(one.mLastInstanceMap==two.mLastInstanceMap)
+							return one.mTransSym<two.mTransSym;
+						else
+							return one.mLastInstanceMap<two.mLastInstanceMap;
 					else
-						return one.mLastInstanceMap<two.mLastInstanceMap;
+						return one.mCStatesMap<two.mCStatesMap;
 				else
-					return one.mCStatesMap<two.mCStatesMap;
+					return one.mBufferMap<two.mBufferMap;
 			else
-				return one.mBufferMap<two.mBufferMap;
-		 else
-			 return one.mNumThreads<two.mNumThreads;
-	else
-		return one.mBuffBound<two.mBuffBound;
+				return one.mEndingWith < two.mEndingWith;
+			else
+				return one.mNumThreads<two.mNumThreads;
+		else
+			return one.mBuffBound<two.mBuffBound;
 
 }
 
@@ -28,11 +31,13 @@ TSOState::TSOState(const TSOState& src){
 	this->mBuffBound = src.mBuffBound;
 	this->mNumThreads = src.mNumThreads;
 	this->mTransSym=src.mTransSym;
+	this->mEndingWith = src.mEndingWith;
 }
 
 TSOState::TSOState(int buffbound,int numthreads){
 	mBuffBound = buffbound;
 	mNumThreads = numthreads;
+	mEndingWith="";
 	std::map<std::string, int> limap;
 
 	for(int i=1; i<=numthreads; i++){
@@ -48,7 +53,7 @@ TSOState::TSOState(int buffbound,int numthreads){
 /**
  * Returns true if buffer is empty else returns false.
  */
-bool TSOState::isBuffEmpty(ThdId tid) const{
+bool TSOState::isBuffEmpty(int tid) const{
 	BOOST_ASSERT_MSG(mBufferMap.find(tid)!=mBufferMap.end(),"Some serious error happend");
 	return mBufferMap.find(tid)->second.empty();
 	//herer mBufferMap[tid].empty did not work because of const nature of this function.
@@ -57,7 +62,7 @@ bool TSOState::isBuffEmpty(ThdId tid) const{
 /**
  * Returns true if buffer is full else returns false.
  */
-bool TSOState::isBuffFull(ThdId tid) const{
+bool TSOState::isBuffFull(int tid) const{
 	BOOST_ASSERT_MSG(mBufferMap.find(tid)!=mBufferMap.end(),"Some serious error happend");
 	return mBufferMap.find(tid)->second.full();
 }
@@ -65,7 +70,7 @@ bool TSOState::isBuffFull(ThdId tid) const{
 /*
  * Getter and Setter for local variable var in LI map of thread tid
  */
-int TSOState::getLastIndex(ThdId tid, std::string& var) const
+int TSOState::getLastIndex(int tid, std::string& var) const
 {
 	BOOST_ASSERT_MSG(mLastInstanceMap.find(tid)!=mLastInstanceMap.end(),"Some serious error happeend");
 	if(mLastInstanceMap.find(tid)->second.find(var)==mLastInstanceMap.find(tid)->second.end())
@@ -85,7 +90,7 @@ int TSOState::getLastIndex(ThdId tid, std::string& var) const
  * Reset all instance indices to 0 for a particular thread id.
  */
 
-void TSOState::initAllIndex(ThdId tid)
+void TSOState::initAllIndex(int tid)
 {
 	std::map<std::string,int> newmap;
 	for(auto t: mLastInstanceMap[tid]){
@@ -95,7 +100,7 @@ void TSOState::initAllIndex(ThdId tid)
 }
 
 
-void TSOState::setLastIndex(ThdId tid, std::string& var, int index)
+void TSOState::setLastIndex(int tid, std::string& var, int index)
 {
 	BOOST_ASSERT_MSG(mLastInstanceMap.find(tid)!=mLastInstanceMap.end(),"Some serious error happened");
 	mLastInstanceMap[tid][var]=index;
@@ -106,7 +111,7 @@ void TSOState::setLastIndex(ThdId tid, std::string& var, int index)
  * Remove the first entry from the buffer (by increasing buff pointers
  * and return the symbol.. return NULL if buf is empty for this process
  */
-std::string TSOState::flushBuf(ThdId tid)
+std::string TSOState::flushBuf(int tid)
 {
 	if(mBufferMap[tid].empty())
 		return NULL;
@@ -121,7 +126,7 @@ std::string TSOState::flushBuf(ThdId tid)
 /*
  * Add a symbol to the buffer, assert failure if buffer is full.
  */
-void TSOState::enqueToBuffer(ThdId tid, std::string sym)
+void TSOState::enqueToBuffer(int tid, std::string sym)
 {
 	BOOST_ASSERT_MSG(!mBufferMap[tid].full(),"Buffer is full, this must be checked before calling this function, look into this");
 	mBufferMap[tid].push_back(sym);
@@ -132,7 +137,7 @@ void TSOState::enqueToBuffer(ThdId tid, std::string sym)
 /*
  * getControlState for a process tid
  */
-struct autstate* TSOState::getCState(ThdId tid) const
+faudes::Idx TSOState::getCState(int tid) const
 {
 	BOOST_ASSERT_MSG(mCStatesMap.find(tid)!=mCStatesMap.end(),"Some serious error, for each process we should have its control state, look into this ");
 	return mCStatesMap.find(tid)->second;
@@ -141,17 +146,17 @@ struct autstate* TSOState::getCState(ThdId tid) const
 /*
  * setControlState for a process tid
  */
-void TSOState::setCState(ThdId tid, struct autstate* newone)
+void TSOState::setCState(int tid, faudes::Idx newone)
 {
 //	BOOST_ASSERT_MSG(mCStatesMap.find(tid)!=mCStatesMap.end(),"Some serious error, for each process we should have its control state, look into this ");
 	mCStatesMap[tid]=newone;
 }
 
-void TSOState::setTransSym(ThdId tid,std::string sym){
+void TSOState::setTransSym(int tid,std::string sym){
 	mTransSym[tid]=sym;
 }
 
-std::string TSOState::getTransSym(ThdId tid) const {
+std::string TSOState::getTransSym(int tid) const {
 	return mTransSym.find(tid)->second;
 }
 

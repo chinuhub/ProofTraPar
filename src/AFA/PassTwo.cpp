@@ -71,7 +71,7 @@ bool AFAState::PassTwo(std::map<AFAStatePtr,AFAStatePtr,mapstatecomparator>& mAl
 			newset.clear();
 
 			int i=0;
-			std::map<z3::expr,AFAStatePtr,mapexpcomparator> labstatemapping;
+			std::map<z3::expr,AFAStatePtr,z3comparator> labstatemapping;
 			std::vector<z3::expr> assumptions;
 			solv.reset();
 			BOOST_FOREACH(auto stp, nextset)

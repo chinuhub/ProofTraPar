@@ -14,19 +14,18 @@
 #include <boost/assert.hpp>
 #include <algorithm>
 #include <tuple>
-extern "C"
-{
-#include <fa.h>
-}
+
 #include <libfaudes.h>
 typedef std::map<std::string,std::string> VarDefInfo;//denotes var--sym pair
 typedef std::map<std::string,std::string> VarUseDefRel;//denotes read-write pair
-typedef std::pair<VarDefInfo,VarUseDefRel> RFRelPairs;
+typedef std::tuple<VarDefInfo,VarUseDefRel,VarUseDefRel> RFRelPairs;//one for rfe and another for rfi
+
 class AFAut {
 private:
 	// Stores the initial state of AFA.
 
 	static AFAStatePtr RecMakeAFAutFromFA(struct autstate* state, std::map<struct autstate*, AFAStatePtr>&,z3::context& );
+	std::string ChopAndReverse(std::string& orig, std::string& mrword);
 public:
 	AFAut(){}
 	AFAStatePtr mInit;
@@ -38,20 +37,31 @@ public:
 	 * Function to convert an NFA/DFA to an AFA
 	 */
 	//putting default argument for memory model as SC
-	static AFAut* MakeAFAutFromFA(struct fa* nfa,Program* program,z3::context&);
+//	static AFAut* MakeAFAutFromFA(struct fa* nfa,Program* program,z3::context&);
 	void Intersection(faudes::Generator& rGen, faudes::Generator& rRes, std::map<faudes::Idx,faudes::Idx>& oldNewInitStatesMap);
 	static AFAut* MakeAFAutProof(std::string& word, z3::expr& mPhi,Program* p, int count, bool& bres, faudes::Generator& generator, std::string memmodel="sc");
-	struct fa* ConvertToNFA();
+	//Added 2march..To store AFA constructed till now.. (for a particular program/ buffer bound)
+		//make sure to set this null when k is increased or we run same program on multiple input files..
+	static std::set<AFAStatePtr> mAFAOrLitStates;
+	static std::set<AFAStatePtr> mAFAInitStates;
+
+//	struct fa* ConvertToNFA();
 	/**
 	 * Complement this AFA and changes init accordingly
 	 */
 	AFAStatePtr Complement(AFAStatePtr);
 	void RecComplement(AFAStatePtr , std::map<AFAStatePtr,bool>& , SetAFAStatesPtr,AFAStatePtr);
+
+	/*
+	 * Clone this AFA and return the new one.
+	 */
+	AFAut* CloneAFA(std::set<AFAStatePtr>& newset, std::map<AFAStatePtr,AFAStatePtr>& newoldmap);
 	/**
 	 * Returns this union second
 	 */
 	void Union(AFAut& second);
 
+	void SaturateEqClassAFA(std::set<AFAStatePtr> AFAOrLitStates,std::set<AFAStatePtr> oldORLitStates,AFAStatePtr falseEqClass);
 	/**
 	 * Returns this intersection secon
 	 */
@@ -72,7 +82,7 @@ public:
 	//Added to support TSO'/PSO .. this function analyzes the proof and returns
 	//a set of write/read pairs which denote value flow reltions.. this will be later used
 	//to identify the set of places where fences need to be inserted.
-	RFRelPairs GetRFRelationFromProof(AFAStatePtr);
+	RFRelPairs GetRFRelationFromProof(AFAStatePtr st, TSOTransSystem& tsotranssystem, std::string& trace,std::map<AFAStatePtr,RFRelPairs>& memoized);
 
 	/**
 	* Checks if the given word is accepted by this AFA or not

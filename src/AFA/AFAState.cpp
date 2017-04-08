@@ -10,7 +10,6 @@
 #include<boost/tokenizer.hpp>
 #include<unordered_map>
 #include<vector>
-#include "AFAut.h"
 
 bool mapstatecomparator::operator() (const AFAStatePtr& one, const AFAStatePtr& two) const
 	{
@@ -53,17 +52,13 @@ bool transitionscomparatorraw::operator() (const std::pair<std::string,std::set<
 	}
 
 
-bool mapexpcomparator::operator() (const z3::expr& one, const z3::expr& two) const
-  	{
-
-  			return (one.hash()<two.hash());
-  	}
-
-
+std::map<z3::expr, bool,z3comparator> AFAState::mUnsatMemoization;
 
 
 bool AFAState::HelperIsUnsat(z3::expr formula)
 	{
+		if(mUnsatMemoization.find(formula)!=mUnsatMemoization.end())
+			return mUnsatMemoization.find(formula)->second;
 		z3::context& ctx = mAMap.ctx();
 		z3::solver solv(ctx);
 		z3::params pc(ctx);
@@ -71,9 +66,13 @@ bool AFAState::HelperIsUnsat(z3::expr formula)
 		solv.set(pc);
 		solv.add(formula);
 		if(solv.check()==z3::check_result::unsat){
+			mUnsatMemoization.insert(std::make_pair(formula,true));
 			return true;
 		}else
+		{
+			mUnsatMemoization.insert(std::make_pair(formula,false));
 			return false;
+		}
 
 	}
 
@@ -109,55 +108,12 @@ z3::expr AFAState::HelperSimplifyExpr(z3::expr exp)
 
 	}
 
-std::set<std::string> AFAState::HelperGetFreeVarsStr(z3::expr& phi){
-	std::set<z3::expr,mapexpcomparator> res = HelperGetFreeVars(phi);
-	std::set<std::string> rest;
-
-	for(const auto& ex: res)
-	{
-		std::stringstream sst;
-		sst<<ex;
-		rest.insert(sst.str());
-	}
-
-	return rest;
+AFAStatePtr AFAState::Clone(){
+	AFAStatePtr n = new AFAState(mType,mAMap,mProgram);
+	n->mHMap = new z3::expr(*mHMap);
+	n->mIsAccepted = mIsAccepted;
+	return n;
 }
-
-
-std::set<z3::expr,mapexpcomparator> AFAState::HelperGetFreeVars(z3::expr& phi){
-	if(phi.is_var()){
-		BOOST_ASSERT_MSG(phi.is_var(),"Some problem: This must be var only");
-		std::set<z3::expr,mapexpcomparator> res;
-		if(phi.is_int()&&!phi.is_numeral()){//I dont know when will it come here.. this function needs more understanding of z3
-			std::cout<<phi<<" is not numeral"<<std::endl;
-			res.insert(phi);
-		    return res;
-		}else
-			return res;
-	}else if(phi.is_app()){
-		std::set<z3::expr,mapexpcomparator> res;
-		if(phi.is_int()&&!phi.is_numeral()){
-			//std::cout<<phi<<" is var too "<<std::endl;
-			res.insert(phi);
-		}
-		//std::cout<<phi<<" is app "<<std::endl;
-		unsigned num = phi.num_args();
-		for (unsigned i = 0; i < num; i++) {
-			z3::expr arg = phi.arg(i);
-	        std::set<z3::expr,mapexpcomparator> curr= HelperGetFreeVars(arg);
-	        res.insert(curr.begin(),curr.end());
-	     }
-		return res;
-	}else if(phi.is_quantifier()){
-		//std::cout<<phi<<" is quantifier"<<std::endl;
-		z3::expr arg = phi.body();
-		return HelperGetFreeVars(arg);
-	}else
-		BOOST_ASSERT_MSG(false,"None type of expr found in freevar");
-
-
-}
-
 void AFAState::PassOne(std::map<AFAStatePtr,AFAStatePtr,mapstatecomparator>& mAllStates){
 
 #ifdef	DBGPRNT
@@ -214,11 +170,13 @@ void AFAState::PassOne(std::map<AFAStatePtr,AFAStatePtr,mapstatecomparator>& mAl
 				z3::goal g(ctx);
 				g.add(mAMap);
 				z3::apply_result res = t(g);
+
 				//it must not throw exception because we know there exists at least one clause in mAMap by this point.
 				SetAFAStatesPtr nextset;
 				for(int i=0; i<res.size();i++){
 					z3::goal r = res[i];
 					//each goal r is of the form a , b or c.
+					std::cout<<"Goal is "<<r<<std::endl;
 					bool isPresent=false;
 					z3::expr pass = r.as_expr();
 					AFAStatePtr st = HelperAddStateIfAbsent(pass,mRWord,isPresent,mAllStates);//add to SeenSet if not.. else return the pointer..
@@ -232,7 +190,11 @@ void AFAState::PassOne(std::map<AFAStatePtr,AFAStatePtr,mapstatecomparator>& mAl
 				z3::expr falseexp = ctx.bool_val(false);
 				BOOST_FOREACH(auto stp, nextset)
 				{
-					BOOST_ASSERT_MSG((*stp).mHMap!=NULL,"Some serious issue as by this time HMap of children must have been set");
+					if(stp->mHMap==NULL)
+					{
+						std::cout<<"serious error for state with amap as "<<stp->mAMap<<std::endl;
+						BOOST_ASSERT_MSG((*stp).mHMap!=NULL,"Some serious issue as by this time HMap of children must have been set");
+					}
 					falseexp = falseexp || (*((*stp).mHMap));
 				}
 				falseexp=HelperSimplifyExpr(falseexp);
@@ -250,7 +212,7 @@ void AFAState::PassOne(std::map<AFAStatePtr,AFAStatePtr,mapstatecomparator>& mAl
 			}
 		//get free variables in mAMap;-1
 		SetAFAStatesPtr nextset;
-			std::set<z3::expr,mapexpcomparator> freevars=HelperGetFreeVars(mAMap);
+			std::set<z3::expr,z3comparator> freevars=Program::HelperGetFreeVars(mAMap);
 #ifdef	DBGPRNT
 			std::cout<<"Got following free vars"<<std::endl;
 			BOOST_FOREACH(auto z, freevars)
@@ -271,11 +233,11 @@ void AFAState::PassOne(std::map<AFAStatePtr,AFAStatePtr,mapstatecomparator>& mAl
 		   	    rest.erase(0,sym.length()+1);//+1 for . concatenated at the end
 				//for each character encountered..
 
-		    	if(AFAut::mProgram->mRWLHRHMap.find(sym)!=AFAut::mProgram->mRWLHRHMap.end()){
+		    	if(mProgram.mRWLHRHMap.find(sym)!=mProgram.mRWLHRHMap.end()){
 		    		//means it is a read/write symbol
 		    		bool isPresent;
 		    	//if does not conflict with the set -1 then add to mNonConflict set
-		    		z3::expr left(std::get<0>((AFAut::mProgram->mRWLHRHMap.find(sym)->second)));
+		    		z3::expr left(std::get<0>((mProgram.mRWLHRHMap.find(sym)->second)));
 #ifdef	DBGPRNT
 		    		std::cout<<"RW:lhs of exp is "<<left<<std::endl;
 	#endif
@@ -284,7 +246,7 @@ void AFAState::PassOne(std::map<AFAStatePtr,AFAStatePtr,mapstatecomparator>& mAl
 		    			//means this symbol conflict with phi and hence must be used for processing..
 		    			notasingle=false;
 		    			notasingleall=false;
-		    			z3::expr right(std::get<1>((AFAut::mProgram->mRWLHRHMap.find(sym)->second)));
+		    			z3::expr right(std::get<1>((mProgram.mRWLHRHMap.find(sym)->second)));
 		    			z3::expr_vector src(ctx),dest(ctx);
 		    			src.push_back(left);
 		    			dest.push_back(right);
@@ -304,7 +266,7 @@ void AFAState::PassOne(std::map<AFAStatePtr,AFAStatePtr,mapstatecomparator>& mAl
 		    			if(isfalse||(istrue&& rest.length()==0)){
 		    				p->mIsAccepted=true;
 		    				//On set of all symbols add self loop to p itself
-		    			/*	BOOST_FOREACH(auto t, AFAut::mProgram->mAllSyms){
+		    			/*	BOOST_FOREACH(auto t, mProgram.mAllSyms){
 		    					HelperAddEdgeIfAbsent(p,p,t);
 		    				}
 */
@@ -327,26 +289,26 @@ void AFAState::PassOne(std::map<AFAStatePtr,AFAStatePtr,mapstatecomparator>& mAl
 		    			mTransitions.insert(std::make_pair(sym,nextset));
 		    			break;
 		    		}
-		    	}else if(AFAut::mProgram->mCASLHRHMap.find(sym)!=AFAut::mProgram->mCASLHRHMap.end()){
+		    	}else if(mProgram.mCASLHRHMap.find(sym)!=mProgram.mCASLHRHMap.end()){
 		    		//means it is a cas symbol
 		    		bool isPresent=false;
 #ifdef	DBGPRNT
 		    		std::cout<<"Found cas "<<sym<<std::endl;
 #endif
-		    		z3::expr left(std::get<0>(AFAut::mProgram->mCASLHRHMap.find(sym)->second));
+		    		z3::expr left(std::get<0>(mProgram.mCASLHRHMap.find(sym)->second));
 #ifdef	DBGPRNT
 		    		std::cout<<"CAS:lhs of exp is "<<left<<std::endl;
 	#endif
 
 		    		z3::expr l1(mAMap);
-		    		z3::expr readarg(std::get<1>(AFAut::mProgram->mCASLHRHMap.find(sym)->second));
+		    		z3::expr readarg(std::get<1>(mProgram.mCASLHRHMap.find(sym)->second));
 		    		//BEWARE that even if no substituteion takes place in cas we still need to conjunct assume part
 		    		//with the input state's mAMap.
 		    		notasingle=false;
 		    		notasingleall=false;
 		    		if(freevars.find(left)!=freevars.end()){
 		    			//means this symbol conflict with phi and hence must be used for processing..
-		    			z3::expr writearg(std::get<2>(AFAut::mProgram->mCASLHRHMap.find(sym)->second));
+		    			z3::expr writearg(std::get<2>(mProgram.mCASLHRHMap.find(sym)->second));
 #ifdef	DBGPRNT
 		    			std::cout<<"CAS:first arg of exp is "<<readarg<<std::endl;
 		    			std::cout<<"CAS:second arg of exp is "<<writearg<<std::endl;
@@ -378,7 +340,7 @@ void AFAState::PassOne(std::map<AFAStatePtr,AFAStatePtr,mapstatecomparator>& mAl
 		    				std::cout<<"inside cas, setting accepted state with amap as "<<mAMap<<std::endl;
 #endif
 		    				p->mIsAccepted=true;
-		    				/*BOOST_FOREACH(auto t, AFAut::mProgram->mAllSyms){
+		    				/*BOOST_FOREACH(auto t, mProgram.mAllSyms){
 		    					HelperAddEdgeIfAbsent(p,p,t);
 		    				}*/
 
@@ -404,13 +366,13 @@ void AFAState::PassOne(std::map<AFAStatePtr,AFAStatePtr,mapstatecomparator>& mAl
 		    			mTransitions.insert(std::make_pair(sym,nextset));
 		    			break;
 
-		    	}else if(AFAut::mProgram->mAssumeLHRHMap.find(sym)!=AFAut::mProgram->mAssumeLHRHMap.end()){
+		    	}else if(mProgram.mAssumeLHRHMap.find(sym)!=mProgram.mAssumeLHRHMap.end()){
 		    		//means it is an assume symbol
 		    		//get the second argument..
 		    		notasingle=false;
 		    		notasingleall=false;
 		    		bool isPresent;
-		    		z3::expr assumepsi(AFAut::mProgram->mAssumeLHRHMap.find(sym)->second);
+		    		z3::expr assumepsi(mProgram.mAssumeLHRHMap.find(sym)->second);
 		    		z3::expr combined(mAMap && assumepsi);
 		    		combined=HelperSimplifyExpr(combined);
 		    		bool isFalse=false;
@@ -428,7 +390,7 @@ void AFAState::PassOne(std::map<AFAStatePtr,AFAStatePtr,mapstatecomparator>& mAl
 		    			//On set of all symbols add self loop to p itself: Not now..
 		    			p->mIsAccepted=true;
 /*
-	    				BOOST_FOREACH(auto t, AFAut::mProgram->mAllSyms){
+	    				BOOST_FOREACH(auto t, mProgram.mAllSyms){
 	    					HelperAddEdgeIfAbsent(p,p,t);
 	    				}
 */
@@ -453,7 +415,10 @@ void AFAState::PassOne(std::map<AFAStatePtr,AFAStatePtr,mapstatecomparator>& mAl
 		    		mTransitions.insert(std::make_pair(sym,nextset));
 		    		break;//This break is important
 		    	}else
+		    	{
+		    		std::cout<<"ERR: sym name is "<<sym<<std::endl;
 		    		BOOST_ASSERT_MSG(false,"Serious error, symbol  is neither r/w, lcas nor assume");
+		    	}
 		    	//if control reaches here with notasingle=true it means this symbol was not confliciting with this state's amap
 		    	//add self loop on this symbol
 		    	//NB: dont do it here as anyway this is going to be added later in pass four.
@@ -495,7 +460,7 @@ bool AFAState::HelperAddEdgeIfAbsent(AFAStatePtr src,AFAStatePtr dest,std::strin
 AFAStatePtr AFAState::HelperAddStateIfAbsent(z3::expr& phi,std::string& mRWord,bool& isPresent, std::map<AFAStatePtr,AFAStatePtr,mapstatecomparator>& mAllStates){
 //create appropriate state based on the type of phi..also check if it is already present or not..
 	if(phi.decl().decl_kind()==Z3_OP_AND){
-		AFAStatePtr st = new AFAState(AND,mRWord,phi);
+		AFAStatePtr st = new AFAState(AND,mRWord,phi, mProgram);
 		if(mAllStates.find(st)!=mAllStates.end()){
 			delete st;
 			st=mAllStates.find(st)->second;
@@ -506,7 +471,7 @@ AFAStatePtr AFAState::HelperAddStateIfAbsent(z3::expr& phi,std::string& mRWord,b
 		}
 		return st;
 	}else if(phi.decl().decl_kind()==Z3_OP_OR){
-		AFAStatePtr st = new AFAState(OR,mRWord,phi);
+		AFAStatePtr st = new AFAState(OR,mRWord,phi, mProgram);
 		if(mAllStates.find(st)!=mAllStates.end()){
 			delete st;
 			st=mAllStates.find(st)->second;
@@ -517,7 +482,7 @@ AFAStatePtr AFAState::HelperAddStateIfAbsent(z3::expr& phi,std::string& mRWord,b
 		}
 		return st;
 	}else{
-		AFAStatePtr st = new AFAState(ORLit,mRWord,phi);
+		AFAStatePtr st = new AFAState(ORLit,mRWord,phi,mProgram);
 		if(mAllStates.find(st)!=mAllStates.end()){
 			delete st;
 			st=mAllStates.find(st)->second;
@@ -530,7 +495,17 @@ AFAStatePtr AFAState::HelperAddStateIfAbsent(z3::expr& phi,std::string& mRWord,b
 	}
 
 }
-
+bool AFAState::IsLogicalEq(z3::expr& one, z3::expr& two){
+	z3::expr comb(one && !two);
+	if(HelperIsUnsat(comb)){
+		//std::cout<<"returning true:"<<comb<<" is unsat"<<std::endl;
+		z3::expr comb2(two && !one);
+		return HelperIsUnsat(comb2);
+	}else{
+		//std::cout<<"returning false"<<std::endl;
+		return false;
+	}
+}
 
 std::set<std::string> AFAState::getTransitionKeys(){
 	std::set<std::string> keyset;

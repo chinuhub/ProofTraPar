@@ -14,61 +14,62 @@
 
 typedef int BuffPtr;
 typedef boost::circular_buffer<std::string> WriteBuffer;
-typedef int ThdId;
-class TSOState{
-	std::map<ThdId, std::map<std::string,int>> mLastInstanceMap;
-	std::map<ThdId, struct autstate*> mCStatesMap;
+ class TSOState{
+	std::map<int, std::map<std::string,int>> mLastInstanceMap;
+	std::map<int, faudes::Idx> mCStatesMap;
 
 	int mNumThreads;
-	std::map<ThdId,std::string> mTransSym;
+	std::map<int,std::string> mTransSym;
 	const TSOState& operator=( const TSOState& );
+
 public:
+	std::string mEndingWith;
 	TSOState(int buffbound, int numthreads);
 	TSOState(const TSOState& src); //IMP issue here: Always put const if you are explicitly making
 	//a copy constructor.. otherwise instantiation of pair (stl) was giving a very obstruse error which
 	//was difficult to find out..
 	int mBuffBound;
-	std::map<ThdId, WriteBuffer> mBufferMap;
+	std::map<int, WriteBuffer> mBufferMap;
 
 	/**
 	 * Returns true if buffer is empty else returns false.
 	 */
-	bool isBuffEmpty(ThdId tid) const;
+	bool isBuffEmpty(int tid) const;
 
 	/**
 	 * Returns true if buffer is full else returns false.
 	*/
-	bool isBuffFull(ThdId tid) const;
+	bool isBuffFull(int tid) const;
 
 	/*
 	 * Getter and Setter for local variable var in LI map of thread tid
 	 */
-	int getLastIndex(ThdId tid, std::string& var) const;
-	void setLastIndex(ThdId tid, std::string& var, int index);
-	void initAllIndex(ThdId tid);
+	int getLastIndex(int tid, std::string& var) const;
+	void setLastIndex(int tid, std::string& var, int index);
+	void initAllIndex(int tid);
 	/*
 	 * Remove the first entry from the buffer (by increasing buff pointers
 	 * and return the symbol.. return NULL if buf is empty for this process
 	 */
-	std::string flushBuf(ThdId tid);
+	std::string flushBuf(int tid);
 	/*
 	 * Add a symbol to the buffer, assert failure if buffer is full.
 	 */
-	void enqueToBuffer(ThdId tid, std::string sym);
+	void enqueToBuffer(int tid, std::string sym);
 
 
 	/*
 	 * getControlState for a process tid
 	 */
-	struct autstate* getCState(ThdId tid) const;
+	faudes::Idx getCState(int tid) const;
 
 	/*
 	 * setControlState for a process tid
 	 */
-	void setCState(ThdId tid, struct autstate*);
+	void setCState(int tid, faudes::Idx);
 
-	void setTransSym(ThdId tid,std::string sym);
-	std::string getTransSym(ThdId tid) const;
+	void setTransSym(int tid,std::string sym);
+	std::string getTransSym(int tid) const;
 
 	friend bool operator <(const TSOState& one, const TSOState&  two);//IMP: This is the way to make
 	//a class comparable.. pair needed this hence was done..
